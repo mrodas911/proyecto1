@@ -1,0 +1,1334 @@
+<title>Tres Horizontes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+
+<style>
+:root{
+  --bg:#F2F4F1;
+  --surface:#FFFFFF;
+  --surface-2:#EAEEE9;
+  --ink:#131C1B;
+  --ink-2:#33423F;
+  --muted:#5B6A67;
+  --rule:#D9E0DB;
+  --rule-strong:#BFCAC3;
+  --accent:#0E6E62;
+  --accent-soft:#DCEDE9;
+  --h3:#0E6E62;
+  --h6:#2F5E96;
+  --h12:#7A4F94;
+  --h3-bg:#DCEDE9;
+  --h6-bg:#DEE8F4;
+  --h12-bg:#EBE1F2;
+  --ok:#2E7D5B;
+  --warn:#9C6206;
+  --risk:#B03A2B;
+  --ok-bg:#DFEFE6;
+  --warn-bg:#F6E9D2;
+  --risk-bg:#F6E0DB;
+  --shadow:0 1px 2px rgba(19,28,27,.05), 0 8px 24px -18px rgba(19,28,27,.35);
+
+  --f-display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --measure:68ch;
+  --wide:min(1080px, 100%);
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1413;
+    --surface:#151E1D;
+    --surface-2:#1B2625;
+    --ink:#E4EBE8;
+    --ink-2:#C3D0CC;
+    --muted:#8FA29E;
+    --rule:#25322F;
+    --rule-strong:#384945;
+    --accent:#48C6B4;
+    --accent-soft:#16302D;
+    --h3:#48C6B4;
+    --h6:#74A9E8;
+    --h12:#B58CD6;
+    --h3-bg:#16302D;
+    --h6-bg:#182739;
+    --h12-bg:#271E33;
+    --ok:#57C08D;
+    --warn:#DDA43F;
+    --risk:#E8776A;
+    --ok-bg:#15291F;
+    --warn-bg:#2C2314;
+    --risk-bg:#2E1B18;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1413;
+  --surface:#151E1D;
+  --surface-2:#1B2625;
+  --ink:#E4EBE8;
+  --ink-2:#C3D0CC;
+  --muted:#8FA29E;
+  --rule:#25322F;
+  --rule-strong:#384945;
+  --accent:#48C6B4;
+  --accent-soft:#16302D;
+  --h3:#48C6B4;
+  --h6:#74A9E8;
+  --h12:#B58CD6;
+  --h3-bg:#16302D;
+  --h6-bg:#182739;
+  --h12-bg:#271E33;
+  --ok:#57C08D;
+  --warn:#DDA43F;
+  --risk:#E8776A;
+  --ok-bg:#15291F;
+  --warn-bg:#2C2314;
+  --risk-bg:#2E1B18;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent-soft);color:var(--ink)}
+a{color:var(--accent);text-underline-offset:.18em;text-decoration-thickness:.06em}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+/* ---------- shell ---------- */
+.shell{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+  max-width:1440px;
+  margin:0 auto;
+  padding:0 20px 96px;
+}
+@media (min-width:1120px){
+  .shell{grid-template-columns:238px minmax(0,1fr);gap:56px;padding:0 40px 120px}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1120px){
+  .rail{
+    display:block;
+    position:sticky;
+    top:0;
+    align-self:start;
+    max-height:100vh;
+    overflow-y:auto;
+    padding:40px 0 40px;
+  }
+}
+.rail-title{
+  font-family:var(--f-mono);
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 14px;
+}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.rail a{
+  display:grid;
+  grid-template-columns:26px 1fr;
+  gap:6px;
+  padding:5px 8px 5px 0;
+  font-family:var(--f-display);
+  font-size:13px;
+  line-height:1.35;
+  font-weight:500;
+  color:var(--ink-2);
+  text-decoration:none;
+  border-left:2px solid transparent;
+  padding-left:10px;
+}
+.rail a:hover{color:var(--accent);border-left-color:var(--rule-strong);background:var(--surface-2)}
+.rail .num{font-family:var(--f-mono);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rail .rail-sep{height:1px;background:var(--rule);margin:12px 10px}
+
+.main{min-width:0;padding-top:0}
+
+/* ---------- masthead ---------- */
+.masthead{
+  padding:64px 0 40px;
+  border-bottom:1px solid var(--rule);
+  margin-bottom:52px;
+}
+.eyebrow{
+  font-family:var(--f-mono);
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 20px;
+}
+h1{
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:clamp(38px,6.4vw,68px);
+  line-height:1.02;
+  letter-spacing:-.028em;
+  margin:0 0 20px;
+  text-wrap:balance;
+  max-width:16ch;
+}
+.standfirst{
+  font-size:20px;
+  line-height:1.55;
+  color:var(--ink-2);
+  max-width:56ch;
+  margin:0 0 34px;
+}
+.standfirst strong{font-weight:600;color:var(--ink)}
+
+.spine{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:stretch;
+  gap:8px;
+  padding:0;
+  margin:0 0 8px;
+  list-style:none;
+}
+.spine li{
+  flex:1 1 150px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-top:3px solid var(--accent);
+  border-radius:2px;
+  padding:12px 14px 14px;
+  box-shadow:var(--shadow);
+}
+.spine .k{
+  font-family:var(--f-mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:block;
+  margin-bottom:5px;
+}
+.spine .v{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:-.01em;line-height:1.25;display:block}
+.spine-note{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin:14px 0 0;line-height:1.6}
+
+/* ---------- sections ---------- */
+section{margin:0 0 68px;scroll-margin-top:24px}
+.sec-head{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:baseline;
+  gap:14px;
+  border-top:2px solid var(--ink);
+  padding-top:14px;
+  margin:0 0 22px;
+}
+.sec-num{
+  font-family:var(--f-mono);
+  font-size:12px;
+  font-weight:600;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.04em;
+}
+h2{
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:clamp(25px,3.4vw,33px);
+  letter-spacing:-.022em;
+  line-height:1.12;
+  margin:0;
+  text-wrap:balance;
+}
+h3{
+  font-family:var(--f-display);
+  font-weight:600;
+  font-size:18px;
+  letter-spacing:-.012em;
+  margin:34px 0 10px;
+  line-height:1.3;
+}
+h4{
+  font-family:var(--f-mono);
+  font-weight:600;
+  font-size:11.5px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:26px 0 8px;
+}
+p{margin:0 0 15px;max-width:var(--measure)}
+ul,ol{max-width:var(--measure);margin:0 0 16px;padding-left:1.25em}
+li{margin:0 0 7px}
+li::marker{color:var(--muted)}
+strong{font-weight:600}
+em{font-style:italic;color:var(--ink-2)}
+code{
+  font-family:var(--f-mono);
+  font-size:.845em;
+  background:var(--surface-2);
+  padding:.12em .38em;
+  border-radius:3px;
+  border:1px solid var(--rule);
+}
+.lede{font-size:18.5px;color:var(--ink-2);max-width:60ch}
+
+/* ---------- wide blocks ---------- */
+.wide{width:var(--wide);max-width:100%}
+
+.panel{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:3px;
+  padding:20px 22px;
+  margin:20px 0;
+  box-shadow:var(--shadow);
+}
+.panel > :last-child{margin-bottom:0}
+.panel-label{
+  font-family:var(--f-mono);
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 12px;
+}
+
+.callout{
+  border-left:3px solid var(--accent);
+  background:var(--accent-soft);
+  padding:14px 18px;
+  border-radius:0 3px 3px 0;
+  margin:20px 0;
+}
+.callout p{margin:0;max-width:64ch}
+.callout p + p{margin-top:10px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:18px 0;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{
+  font-family:var(--f-mono);
+  font-size:10.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:600;
+  background:var(--surface-2);
+  border-bottom:1px solid var(--rule-strong);
+  white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.mono,th.mono,.mono{font-family:var(--f-mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+td strong{font-family:var(--f-display);font-weight:600;font-size:13.5px}
+.num-col{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:12.5px;white-space:nowrap}
+
+/* ---------- chips ---------- */
+.chip{
+  display:inline-block;
+  font-family:var(--f-mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:2px 7px;
+  border-radius:2px;
+  white-space:nowrap;
+  border:1px solid transparent;
+}
+.c-h3{background:var(--h3-bg);color:var(--h3);border-color:var(--h3)}
+.c-h6{background:var(--h6-bg);color:var(--h6);border-color:var(--h6)}
+.c-h12{background:var(--h12-bg);color:var(--h12);border-color:var(--h12)}
+.c-ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.c-warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.c-risk{background:var(--risk-bg);color:var(--risk);border-color:var(--risk)}
+.c-mute{background:var(--surface-2);color:var(--muted);border-color:var(--rule-strong)}
+
+/* ---------- loop diagram ---------- */
+.loop{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:stretch;
+  gap:0;
+  margin:22px 0 8px;
+}
+.loop-node{
+  flex:1 1 168px;
+  min-width:150px;
+  background:var(--surface);
+  border:1px solid var(--rule-strong);
+  border-radius:3px;
+  padding:14px 15px 15px;
+  position:relative;
+  box-shadow:var(--shadow);
+}
+.loop-arrow{
+  flex:0 0 34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--accent);
+  font-family:var(--f-mono);
+  font-size:19px;
+  line-height:1;
+}
+.loop-node .step{
+  font-family:var(--f-mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  color:var(--muted);
+  display:block;
+  margin-bottom:6px;
+}
+.loop-node .name{
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:16px;
+  letter-spacing:-.015em;
+  display:block;
+  margin-bottom:6px;
+}
+.loop-node .desc{font-size:13.5px;line-height:1.45;color:var(--ink-2);display:block}
+.loop-return{
+  font-family:var(--f-mono);
+  font-size:11.5px;
+  color:var(--muted);
+  border-top:1px dashed var(--rule-strong);
+  padding-top:9px;
+  margin-top:4px;
+}
+@media (max-width:700px){
+  .loop{flex-direction:column}
+  .loop-arrow{flex:0 0 26px;transform:rotate(90deg)}
+}
+
+/* ---------- layer diagram ---------- */
+.layers{display:flex;flex-direction:column;gap:8px;margin:20px 0}
+.layer{
+  display:grid;
+  grid-template-columns:104px 1fr;
+  gap:14px;
+  align-items:start;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-left:3px solid var(--rule-strong);
+  border-radius:3px;
+  padding:12px 15px;
+}
+.layer.is-ai{border-left-color:var(--accent);background:var(--accent-soft)}
+.layer .lname{
+  font-family:var(--f-mono);
+  font-size:10.5px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--muted);
+  padding-top:3px;
+}
+.layer .lbody{display:flex;flex-wrap:wrap;gap:6px}
+.box{
+  font-family:var(--f-display);
+  font-size:13px;
+  font-weight:500;
+  background:var(--bg);
+  border:1px solid var(--rule-strong);
+  border-radius:2px;
+  padding:5px 10px;
+  line-height:1.3;
+}
+.layer.is-ai .box{background:var(--surface);border-color:var(--accent)}
+@media (max-width:640px){
+  .layer{grid-template-columns:1fr;gap:8px}
+}
+
+/* ---------- today card mock ---------- */
+.today{
+  background:var(--surface);
+  border:1px solid var(--rule-strong);
+  border-radius:4px;
+  padding:18px;
+  max-width:430px;
+  box-shadow:var(--shadow);
+  margin:20px 0;
+}
+.today-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding-bottom:11px;margin-bottom:6px}
+.today-head .d{font-family:var(--f-display);font-weight:700;font-size:19px;letter-spacing:-.02em}
+.today-head .b{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.task{display:grid;grid-template-columns:20px 1fr;gap:11px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.task:last-of-type{border-bottom:none}
+.tick{
+  width:18px;height:18px;border:1.5px solid var(--rule-strong);border-radius:3px;margin-top:3px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--surface);
+}
+.tick.done{background:var(--ok);border-color:var(--ok)}
+.task .t{font-family:var(--f-display);font-weight:600;font-size:14.5px;line-height:1.35;display:block;margin-bottom:5px;letter-spacing:-.008em}
+.task.is-done .t{color:var(--muted);text-decoration:line-through}
+.task .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.today-foot{border-top:1px solid var(--rule);margin-top:8px;padding-top:11px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);line-height:1.55}
+
+/* ---------- formula / code ---------- */
+.code{
+  font-family:var(--f-mono);
+  font-size:12.5px;
+  line-height:1.72;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:3px;
+  padding:16px 18px;
+  overflow-x:auto;
+  margin:18px 0;
+  white-space:pre;
+  color:var(--ink-2);
+}
+.code .cm{color:var(--muted)}
+.code .kw{color:var(--accent);font-weight:600}
+.formula{
+  font-family:var(--f-mono);
+  font-size:13.5px;
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:3px;
+  padding:14px 16px;
+  overflow-x:auto;
+  margin:18px 0;
+  color:var(--ink);
+  white-space:pre;
+  line-height:1.7;
+}
+
+/* ---------- ladder ---------- */
+.ladder{list-style:none;padding:0;margin:18px 0;max-width:var(--wide);counter-reset:rung}
+.ladder li{
+  counter-increment:rung;
+  display:grid;
+  grid-template-columns:30px 1fr;
+  gap:14px;
+  padding:13px 15px 13px 13px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:3px;
+  margin-bottom:6px;
+  max-width:none;
+}
+.ladder li::before{
+  content:counter(rung);
+  font-family:var(--f-mono);
+  font-size:12px;
+  font-weight:600;
+  color:var(--surface);
+  background:var(--accent);
+  width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:2px;
+  margin-top:2px;
+}
+.ladder .rname{font-family:var(--f-display);font-weight:600;font-size:15px;display:block;margin-bottom:3px;letter-spacing:-.01em}
+.ladder .rbody{font-size:14.5px;color:var(--ink-2);display:block}
+.ladder .rbody code{font-size:.8em}
+
+/* ---------- split lists ---------- */
+.split{display:grid;grid-template-columns:1fr;gap:16px;margin:18px 0}
+@media (min-width:760px){.split{grid-template-columns:1fr 1fr}}
+.split .col{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:16px 18px}
+.split .col.in{border-top:3px solid var(--ok)}
+.split .col.out{border-top:3px solid var(--muted)}
+.split ul{margin:0;padding-left:1.15em;max-width:none;font-size:14.5px}
+.split li{margin-bottom:6px}
+.split h4{margin-top:0}
+
+/* ---------- screen list ---------- */
+.screens{display:grid;grid-template-columns:1fr;gap:8px;margin:18px 0}
+@media (min-width:700px){.screens{grid-template-columns:1fr 1fr}}
+.screen{
+  background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:14px 16px;
+  border-top:3px solid var(--rule-strong);
+}
+.screen.core{border-top-color:var(--accent)}
+.screen .sname{font-family:var(--f-display);font-weight:700;font-size:15.5px;letter-spacing:-.012em;display:block;margin-bottom:2px}
+.screen .sq{font-family:var(--f-body);font-style:italic;font-size:14px;color:var(--accent);display:block;margin-bottom:8px}
+.screen .sd{font-size:14px;line-height:1.5;color:var(--ink-2);display:block}
+
+.footer{
+  border-top:2px solid var(--ink);
+  padding-top:20px;
+  margin-top:20px;
+  font-family:var(--f-mono);
+  font-size:11.5px;
+  color:var(--muted);
+  line-height:1.7;
+  max-width:var(--measure);
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+}
+</style>
+
+<div class="shell">
+
+<nav class="rail" aria-label="Secciones">
+  <p class="rail-title">Propuesta</p>
+  <ol>
+    <li><a href="#s1"><span class="num">01</span><span>Arquitectura funcional</span></a></li>
+    <li><a href="#s2"><span class="num">02</span><span>Pantallas</span></a></li>
+    <li><a href="#s3"><span class="num">03</span><span>Flujo de usuario</span></a></li>
+    <li><a href="#s4"><span class="num">04</span><span>Alcance del MVP</span></a></li>
+    <li><a href="#s5"><span class="num">05</span><span>Segunda fase</span></a></li>
+    <li><a href="#s6"><span class="num">06</span><span>Stack técnico</span></a></li>
+    <li><a href="#s7"><span class="num">07</span><span>Modelo de datos</span></a></li>
+    <li><a href="#s8"><span class="num">08</span><span>Integración de IA</span></a></li>
+    <li><a href="#s9"><span class="num">09</span><span>Modelo y costes</span></a></li>
+    <li><a href="#s10"><span class="num">10</span><span>Objetivo → microacción</span></a></li>
+    <li><a href="#s11"><span class="num">11</span><span>Replanificación</span></a></li>
+    <li><a href="#s12"><span class="num">12</span><span>UX / UI</span></a></li>
+    <li><a href="#s13"><span class="num">13</span><span>Complejidad y plan</span></a></li>
+  </ol>
+  <div class="rail-sep"></div>
+  <ol>
+    <li><a href="#cierre"><span class="num">→</span><span>Qué construir primero</span></a></li>
+  </ol>
+</nav>
+
+<main class="main">
+
+<header class="masthead">
+  <p class="eyebrow">Propuesta de producto y arquitectura</p>
+  <h1>Tres Horizontes</h1>
+  <p class="standfirst">Una app personal de objetivos a <strong>3, 6 y 12 meses</strong> cuyo trabajo real no es guardar metas, sino responder una sola pregunta cada mañana: <em>¿qué tres a cinco cosas pequeñas hago hoy?</em></p>
+
+  <ul class="spine">
+    <li><span class="k">Núcleo 1</span><span class="v">Objetivo</span></li>
+    <li><span class="k">Núcleo 2</span><span class="v">Plan</span></li>
+    <li><span class="k">Núcleo 3</span><span class="v">Microacción diaria</span></li>
+    <li><span class="k">Núcleo 4</span><span class="v">Replanificación</span></li>
+  </ul>
+  <p class="spine-note">Todo lo demás — dashboard, integraciones, salud, calendario, gamificación — se construye alrededor de estos cuatro. Si el núcleo no es excelente, nada de lo otro salva el producto.</p>
+</header>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Arquitectura funcional</h2></div>
+
+  <p class="lede">El sistema es un bucle cerrado, no un CRUD de tareas. Cada vuelta del bucle produce un plan del día y consume la evidencia del día anterior.</p>
+
+  <div class="wide">
+  <div class="loop">
+    <div class="loop-node">
+      <span class="step">01</span><span class="name">Objetivo</span>
+      <span class="desc">Capturas una intención. La IA la interroga hasta volverla medible y le pone fecha, criterio de cumplimiento y coste semanal estimado.</span>
+    </div>
+    <div class="loop-arrow" aria-hidden="true">→</div>
+    <div class="loop-node">
+      <span class="step">02</span><span class="name">Plan</span>
+      <span class="desc">Etapas → hitos → cargas mensuales y semanales → un <em>banco de microacciones</em> tipificadas y estimadas en minutos.</span>
+    </div>
+    <div class="loop-arrow" aria-hidden="true">→</div>
+    <div class="loop-node">
+      <span class="step">03</span><span class="name">Hoy</span>
+      <span class="desc">Un selector determinista elige 3–5 microacciones que caben en tu presupuesto real de minutos. La IA solo las redacta y ordena.</span>
+    </div>
+    <div class="loop-arrow" aria-hidden="true">→</div>
+    <div class="loop-node">
+      <span class="step">04</span><span class="name">Señal</span>
+      <span class="desc">Cierras el día en 20 segundos: hecho / a medias / no. Eso alimenta cumplimiento, velocidad real y fricción por tipo de acción.</span>
+    </div>
+  </div>
+  <p class="loop-return">↺ &nbsp;La señal vuelve al plan: el motor de replanificación reescribe el plan, no acumula pendientes. Un pendiente no hecho caduca; lo que cambia es el plan.</p>
+  </div>
+
+  <h3>Los siete módulos</h3>
+
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Módulo</th><th>Responsabilidad</th><th>¿IA?</th><th>Determinismo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>M1 · Captura y clarificación</strong></td><td>Convertir una frase vaga en un objetivo con criterio de éxito verificable, fecha y horizonte.</td><td>Sí, conversacional</td><td>Bajo — es diálogo</td></tr>
+      <tr><td><strong>M2 · Planificador</strong></td><td>Descomponer el objetivo en etapas, hitos, cargas mensuales/semanales y banco de microacciones.</td><td>Sí, generativo</td><td>Medio — salida validada contra esquema y contra el presupuesto de tiempo</td></tr>
+      <tr><td><strong>M3 · Programador diario</strong></td><td>Elegir las 3–5 microacciones de hoy entre todos los objetivos activos.</td><td>Solo redacción</td><td><strong>Alto — algoritmo, no LLM</strong></td></tr>
+      <tr><td><strong>M4 · Registro y señales</strong></td><td>Check-in del día, cálculo de rachas, cumplimiento, minutos reales, velocidad por objetivo.</td><td>No</td><td>Total</td></tr>
+      <tr><td><strong>M5 · Replanificación</strong></td><td>Detectar desviación, decidir el nivel de ajuste, reescribir el plan y explicarlo.</td><td>Sí, con reglas duras encima</td><td>Medio-alto</td></tr>
+      <tr><td><strong>M6 · Revisiones y dashboard</strong></td><td>Cierre diario, revisión semanal, informe mensual, proyecciones y objetivos en riesgo.</td><td>Sí, redacción sobre métricas ya calculadas</td><td>Los números son deterministas; solo el texto es IA</td></tr>
+      <tr><td><strong>M7 · Coach</strong></td><td>Chat con herramientas: leer plan, simular reprogramación, crear objetivos, priorizar.</td><td>Sí, agente con tools</td><td>Bajo, pero cada acción pasa por la misma API validada</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>Servicios transversales</h4>
+  <ul>
+    <li><strong>Perfil de capacidad.</strong> Minutos disponibles por día de la semana, ventanas horarias, energía típica. Es la restricción dura que impide que el sistema te pida 6 horas un martes.</li>
+    <li><strong>Detector de conflictos.</strong> Compara la suma de cargas semanales de todos los objetivos activos contra la capacidad declarada, y avisa antes de que el plan sea imposible.</li>
+    <li><strong>Capa LLM.</strong> Un único gateway interno: enrutado por función, salida estructurada obligatoria, caché de prompts, registro de cada llamada, reintentos y modelo intercambiable.</li>
+    <li><strong>Integraciones</strong> (fase 2): calendario, notificaciones, salud, correo.</li>
+  </ul>
+
+  <h3>Capas del sistema</h3>
+  <div class="layers wide">
+    <div class="layer"><span class="lname">Cliente</span><span class="lbody"><span class="box">Hoy</span><span class="box">Objetivos</span><span class="box">Coach</span><span class="box">Revisiones</span><span class="box">Dashboard</span><span class="box">Caché offline</span></span></div>
+    <div class="layer"><span class="lname">API</span><span class="lbody"><span class="box">Auth</span><span class="box">Goals</span><span class="box">Plans</span><span class="box">Today</span><span class="box">Checkins</span><span class="box">Reviews</span><span class="box">Coach (stream)</span></span></div>
+    <div class="layer is-ai"><span class="lname">Motor IA</span><span class="lbody"><span class="box">Clarificador</span><span class="box">Planificador</span><span class="box">Redactor del día</span><span class="box">Replanificador</span><span class="box">Analista de revisión</span><span class="box">Coach agente</span><span class="box">Detector de conflictos</span></span></div>
+    <div class="layer"><span class="lname">Algoritmos</span><span class="lbody"><span class="box">Selector diario</span><span class="box">Presupuesto de minutos</span><span class="box">Repetición espaciada</span><span class="box">Velocidad y proyección</span><span class="box">Escalera de ajuste</span></span></div>
+    <div class="layer"><span class="lname">Trabajos</span><span class="lbody"><span class="box">Generar día (madrugada)</span><span class="box">Caducar pendientes</span><span class="box">Revisión semanal</span><span class="box">Informe mensual</span><span class="box">Recordatorios</span></span></div>
+    <div class="layer"><span class="lname">Datos</span><span class="lbody"><span class="box">PostgreSQL</span><span class="box">pgvector</span><span class="box">Redis / colas</span><span class="box">Trazas LLM</span></span></div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Pantallas principales</h2></div>
+
+  <p class="lede">Regla de diseño: <strong>una pantalla responde una pregunta</strong>. Si una pantalla responde dos, se parte en dos. Las cuatro marcadas en teal son el MVP.</p>
+
+  <div class="screens wide">
+    <div class="screen core"><span class="sname">Hoy</span><span class="sq">¿Qué hago hoy?</span><span class="sd">La pantalla de inicio y el 80 % del uso. 3–5 tarjetas, una línea de contexto arriba, nada más. Sin listas largas, sin backlog visible, sin badges de pendientes.</span></div>
+    <div class="screen core"><span class="sname">Cierre del día</span><span class="sq">¿Qué pasó hoy?</span><span class="sd">Se abre sola a la hora que definas. Tres botones por acción, un campo opcional de una línea, y la frase de la IA sobre mañana. Debe durar 20 segundos.</span></div>
+    <div class="screen core"><span class="sname">Nuevo objetivo</span><span class="sq">¿Qué quiero conseguir?</span><span class="sd">Un campo de texto libre, luego un diálogo corto de 2–4 preguntas de la IA, luego la propuesta de plan con etapas e hitos para aprobar o editar.</span></div>
+    <div class="screen core"><span class="sname">Objetivos</span><span class="sq">¿En qué estoy trabajando?</span><span class="sd">Tres bloques: <span class="chip c-h3">3 meses</span> <span class="chip c-h6">6 meses</span> <span class="chip c-h12">12 meses</span>. Cada tarjeta: % de avance, próximo hito, estado, y racha.</span></div>
+    <div class="screen"><span class="sname">Detalle del objetivo</span><span class="sq">¿Cómo voy a llegar?</span><span class="sd">El plan completo: etapas colapsadas, hitos con fecha y criterio, carga semanal, historial de versiones del plan con el motivo de cada cambio.</span></div>
+    <div class="screen"><span class="sname">Coach</span><span class="sq">Ayúdame a decidir</span><span class="sd">Chat con accesos rápidos: «solo tengo 30 minutos», «voy atrasado con X», «¿qué estoy descuidando?», «analiza los últimos 30 días».</span></div>
+    <div class="screen"><span class="sname">Revisión semanal</span><span class="sq">¿Cómo fue la semana?</span><span class="sd">Cumplimiento, objetivos que avanzan, objetivos atrasados, la propuesta de replanificación para aceptar o rechazar en un toque.</span></div>
+    <div class="screen"><span class="sname">Dashboard</span><span class="sq">¿Cómo va todo?</span><span class="sd">Avance por horizonte, racha, microacciones completadas, objetivos en riesgo, próximos hitos, evolución semanal y mensual.</span></div>
+    <div class="screen"><span class="sname">Mi capacidad</span><span class="sq">¿Cuánto tiempo tengo?</span><span class="sd">Minutos por día de la semana, ventanas horarias, días de descanso. Es la restricción que hace realista todo lo demás — no es «ajustes», es producto.</span></div>
+    <div class="screen"><span class="sname">Informe mensual</span><span class="sq">¿Sigo en camino?</span><span class="sd">Una pantalla-documento por mes: % por objetivo, hitos logrados, desviaciones, y de tres a cinco recomendaciones concretas.</span></div>
+  </div>
+
+  <h3>Anatomía de «Hoy»</h3>
+  <div class="today">
+    <div class="today-head"><span class="d">Hoy · martes</span><span class="b">42 min planificados</span></div>
+
+    <div class="task">
+      <span class="tick" aria-hidden="true"></span>
+      <span>
+        <span class="t">Escuchar 15 min de un podcast en inglés sobre tu sector</span>
+        <span class="meta">
+          <span class="chip c-mute">15 min</span>
+          <span class="chip c-h6">Inglés profesional</span>
+          <span class="chip c-risk">Alta</span>
+        </span>
+      </span>
+    </div>
+
+    <div class="task">
+      <span class="tick" aria-hidden="true"></span>
+      <span>
+        <span class="t">Aprender 5 palabras de tu vocabulario de trabajo</span>
+        <span class="meta">
+          <span class="chip c-mute">7 min</span>
+          <span class="chip c-h6">Inglés profesional</span>
+          <span class="chip c-warn">Media</span>
+        </span>
+      </span>
+    </div>
+
+    <div class="task is-done">
+      <span class="tick done" aria-hidden="true">✓</span>
+      <span>
+        <span class="t">Repasar el vocabulario de ayer</span>
+        <span class="meta">
+          <span class="chip c-mute">5 min</span>
+          <span class="chip c-h6">Inglés profesional</span>
+          <span class="chip c-ok">Hecho</span>
+        </span>
+      </span>
+    </div>
+
+    <div class="task">
+      <span class="tick" aria-hidden="true"></span>
+      <span>
+        <span class="t">Escribir el primer párrafo de la sección «problema»</span>
+        <span class="meta">
+          <span class="chip c-mute">15 min</span>
+          <span class="chip c-h3">Lanzar side project</span>
+          <span class="chip c-risk">Alta</span>
+        </span>
+      </span>
+    </div>
+
+    <div class="today-foot">Impacto: acerca el hito «conversación de 10 min sin trabarte» al 14 nov.<br>Solo tengo 30 minutos →</div>
+  </div>
+
+  <p>Cada tarjeta lleva exactamente lo que pediste — qué hacer, cuánto dura, a qué objetivo contribuye, prioridad — y el impacto esperado se muestra <em>una vez por día al pie</em>, no repetido cinco veces. Repetirlo en cada tarjeta convierte la pantalla en un informe; ponerlo al pie la mantiene como una lista de cuatro cosas.</p>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Flujo de usuario</h2></div>
+
+  <h3>Alta (una sola vez, 6–8 minutos)</h3>
+  <ol>
+    <li><strong>Capacidad antes que objetivos.</strong> «¿Cuántos minutos al día puedes dedicar, de lunes a domingo?» Se pregunta primero a propósito: fija el techo antes de que la ilusión fije el suelo.</li>
+    <li><strong>Primer objetivo en texto libre.</strong> Sin formulario. Una frase.</li>
+    <li><strong>Diálogo de clarificación.</strong> Dos a cuatro preguntas de la IA, nunca más. Al final se muestra el objetivo reformulado y su criterio de cumplimiento, editable.</li>
+    <li><strong>Propuesta de plan.</strong> Etapas, hitos con fecha, carga semanal en minutos. El usuario aprueba, edita o pide otra versión.</li>
+    <li><strong>Primer día generado en el acto.</strong> El alta termina en la pantalla «Hoy» con acciones reales, no en una pantalla vacía. Esto es decisivo para la retención del día 1.</li>
+  </ol>
+
+  <h3>Ciclo diario</h3>
+  <ol>
+    <li><strong>03:30 hora local</strong> — un trabajo programado genera el día: caduca lo no hecho de ayer, recalcula señales, ejecuta el selector, y la IA redacta las tarjetas.</li>
+    <li><strong>Mañana</strong> — notificación: «4 acciones, 42 minutos». Abrir la app ya muestra el día listo.</li>
+    <li><strong>Durante el día</strong> — se marca cada acción con un toque. Nada obligatorio, nada de temporizadores forzados.</li>
+    <li><strong>Noche</strong> — cierre del día: hecho / a medias / no hecho, y una frase de la IA sobre mañana.</li>
+  </ol>
+
+  <h3>Ciclo semanal y mensual</h3>
+  <ol>
+    <li><strong>Domingo</strong> — revisión semanal: qué avanzó, qué se atrasó, y <em>una</em> propuesta de replanificación con un botón de aceptar. Nunca una lista de siete decisiones.</li>
+    <li><strong>Fin de mes</strong> — informe: % por objetivo, hitos alcanzados, desviación entre el plan original y el real, proyección de fecha de cumplimiento, recomendaciones.</li>
+  </ol>
+
+  <div class="callout">
+    <p><strong>Interrupciones que el flujo debe soportar sin romperse:</strong> «hoy solo tengo 30 minutos» (reprograma el día in situ), «me voy de viaje 5 días» (pausa objetivos y desplaza hitos), «este objetivo ya no me importa» (archivar sin culpa, y redistribuir su tiempo entre los demás).</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Alcance del MVP</h2></div>
+
+  <p class="lede">El MVP tiene un solo criterio de éxito: que una persona use la pantalla «Hoy» treinta días seguidos y llegue a un hito real. Todo lo que no sirva a eso, fuera.</p>
+
+  <div class="split wide">
+    <div class="col in">
+      <h4>Dentro</h4>
+      <ul>
+        <li>Cuenta individual, un solo usuario, correo + contraseña o enlace mágico.</li>
+        <li>Perfil de capacidad: minutos por día de la semana.</li>
+        <li>Alta de objetivos con horizonte 3 / 6 / 12 meses, categoría, prioridad, fecha y criterio de cumplimiento.</li>
+        <li>Diálogo de clarificación con IA y puntuación de claridad del objetivo.</li>
+        <li>Generación del plan: etapas, hitos, carga semanal, banco de microacciones.</li>
+        <li>Pantalla «Hoy» con 3–5 microacciones, generada cada madrugada.</li>
+        <li>Check-in de tres estados + caducidad automática de lo no hecho.</li>
+        <li>Motor de replanificación: diario ligero, semanal con IA, disparador por desviación.</li>
+        <li>Revisión semanal y cierre diario.</li>
+        <li>Dashboard mínimo: % por objetivo, racha, próximos hitos, objetivos en riesgo.</li>
+        <li>Coach en chat con tres capacidades: reorganizar el día por tiempo, explicar el estado de un objetivo, crear un objetivo nuevo.</li>
+        <li>Detector de conflictos al superar la capacidad declarada.</li>
+        <li>Notificación local de mañana y de cierre del día.</li>
+      </ul>
+    </div>
+    <div class="col out">
+      <h4>Fuera del MVP, a propósito</h4>
+      <ul>
+        <li>Integración con calendario, correo o herramientas de trabajo.</li>
+        <li>Apple Health / Google Health.</li>
+        <li>Notificaciones push por servidor y recordatorios contextuales.</li>
+        <li>Web además de móvil (o móvil además de web: se elige uno).</li>
+        <li>Colaboración, compartir objetivos, accountability social.</li>
+        <li>Gamificación más allá de la racha (insignias, niveles, puntos).</li>
+        <li>Voz, widgets, watch, modo offline completo.</li>
+        <li>Plantillas de objetivos y biblioteca de planes.</li>
+        <li>Multi-idioma, exportación, suscripciones y pagos.</li>
+        <li>Personalización del tono del coach.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p>Dos decisiones de alcance que ahorran semanas: <strong>una sola plataforma</strong> en el MVP (recomiendo móvil, porque el hábito diario vive en el teléfono) y <strong>sin pagos</strong>. Un objetivo de aprendizaje, no de negocio, todavía.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Segunda fase, y lo que viene después</h2></div>
+
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Fase</th><th>Funcionalidad</th><th>Por qué después</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">F2</td><td><strong>Calendario bidireccional</strong> — leer huecos reales y escribir bloques para las microacciones</td><td>Multiplica el valor del selector diario, pero necesita que el selector ya sea bueno. Con un plan malo, meterlo en tu calendario lo empeora.</td></tr>
+      <tr><td class="mono">F2</td><td><strong>Notificaciones push inteligentes</strong> — a la hora en que históricamente completas cosas</td><td>Requiere ~4 semanas de datos de comportamiento para no ser ruido.</td></tr>
+      <tr><td class="mono">F2</td><td><strong>Recordatorio contextual del cierre del día</strong></td><td>Depende de push por servidor.</td></tr>
+      <tr><td class="mono">F2</td><td><strong>Web + móvil</strong> con sincronía</td><td>La planificación larga se hace mejor en pantalla grande; el día, en el teléfono.</td></tr>
+      <tr><td class="mono">F2</td><td><strong>Plantillas de objetivos</strong> a partir de planes que funcionaron</td><td>Reduce mucho el coste de IA y mejora la calidad del primer plan.</td></tr>
+      <tr><td class="mono">F2</td><td><strong>Memoria del coach</strong> con embeddings sobre tu historial</td><td>Necesita historial. Antes de 60 días no hay nada que recordar.</td></tr>
+      <tr><td class="mono">F3</td><td><strong>Apple Health / Google Health</strong> — cerrar automáticamente objetivos de salud</td><td>Elimina el check-in manual en una categoría entera; alto valor, alta fricción de permisos y revisión de tienda.</td></tr>
+      <tr><td class="mono">F3</td><td><strong>Correo y herramientas de trabajo</strong> (Notion, Jira, GitHub) como evidencia de avance</td><td>El sueño es que el sistema detecte el progreso sin que lo marques. Es también la mayor superficie de privacidad.</td></tr>
+      <tr><td class="mono">F3</td><td><strong>Modo acompañado</strong>: un amigo o coach ve tu avance</td><td>Cambia el producto de personal a social; decisión de negocio, no técnica.</td></tr>
+      <tr><td class="mono">F3</td><td><strong>Voz y widget de pantalla de inicio</strong></td><td>Reduce a cero la fricción del check-in diario.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Arquitectura tecnológica</h2></div>
+
+  <p class="lede">Criterio: un solo lenguaje de punta a punta, una sola base de datos, y nada que necesite un equipo de operaciones. Esta app se construye y se mantiene con una o dos personas.</p>
+
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Capa</th><th>Recomendación</th><th>Por qué esta y no otra</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cliente</strong></td><td class="mono">React Native + Expo, TypeScript, expo-router</td><td>Un código para iOS y Android, y build web cuando llegue la fase 2. El hábito diario vive en el móvil; una PWA pierde notificaciones fiables en iOS.</td></tr>
+      <tr><td><strong>Estado y datos</strong></td><td class="mono">TanStack Query + SQLite (expo-sqlite)</td><td>El día de hoy debe abrirse sin red. Caché local del plan diario, sincronía optimista de los check-ins.</td></tr>
+      <tr><td><strong>API</strong></td><td class="mono">Node 22 + Fastify + TypeScript, validación con Zod</td><td>Mismos tipos y esquemas en cliente, API y salidas del LLM. Ese esquema compartido es el que evita que la IA devuelva basura silenciosamente.</td></tr>
+      <tr><td><strong>Base de datos</strong></td><td class="mono">PostgreSQL 16 (Supabase o Neon) + pgvector</td><td>Todo el dominio es relacional y temporal. Postgres cubre datos, colas ligeras, JSON de planes y búsqueda vectorial sin sumar otro motor.</td></tr>
+      <tr><td><strong>ORM</strong></td><td class="mono">Drizzle</td><td>SQL explícito y migraciones legibles; el modelo tiene mucha consulta temporal donde un ORM mágico estorba.</td></tr>
+      <tr><td><strong>Trabajos y colas</strong></td><td class="mono">BullMQ + Redis</td><td>Generación nocturna por zona horaria, reintentos, y reprogramación por eventos. La generación del día <em>no</em> puede depender de que el usuario abra la app.</td></tr>
+      <tr><td><strong>Auth</strong></td><td class="mono">Supabase Auth o Clerk</td><td>Enlace mágico y OAuth resueltos en una tarde. No es donde está el producto.</td></tr>
+      <tr><td><strong>IA</strong></td><td class="mono">Claude API vía <code>@anthropic-ai/sdk</code>, detrás de un gateway propio</td><td>Un solo punto donde vive el enrutado por función, los esquemas de salida, la caché y las trazas. Cambiar de modelo debe ser un cambio de una línea.</td></tr>
+      <tr><td><strong>Observabilidad de IA</strong></td><td class="mono">Trazas propias en Postgres + Langfuse</td><td>Cada generación se guarda con prompt, versión, coste, latencia y si el usuario la aceptó. Sin esto no se puede mejorar el planificador.</td></tr>
+      <tr><td><strong>Infra</strong></td><td class="mono">Fly.io o Railway, un contenedor API + un worker</td><td>Regiones cercanas al usuario, despliegue en minutos, coste casi nulo al principio.</td></tr>
+      <tr><td><strong>Notificaciones</strong></td><td class="mono">Locales (expo-notifications) en MVP, Expo Push en F2</td><td>Las locales no requieren backend y cubren mañana y cierre del día.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>La alternativa razonable</strong> es Python + FastAPI en el backend si tu comodidad está ahí, o si prevés análisis y modelos propios más adelante. El coste: pierdes el esquema Zod compartido entre cliente, API y salida del LLM, que es una de las mejores defensas contra los errores silenciosos de esta arquitectura. Si eliges Python, replica esa disciplina con Pydantic en ambos lados.</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Base de datos y modelo de datos</h2></div>
+
+  <p class="lede">Tres decisiones de modelado sostienen todo el producto: los planes son <strong>inmutables y versionados</strong>, las microacciones viven en un <strong>banco</strong> separado del <strong>día</strong>, y el check-in es un <strong>evento</strong>, no un campo del objetivo.</p>
+
+  <h3>Entidades y relaciones</h3>
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Tabla</th><th>Campos clave</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">users</td><td class="mono">id, email, tz, created_at</td><td><code>tz</code> es obligatorio: la generación nocturna se agenda por zona horaria.</td></tr>
+      <tr><td class="mono">capacity_profiles</td><td class="mono">user_id, dow (0-6), minutes, window_start, window_end, energy</td><td>Siete filas por usuario. La restricción dura de todo el sistema.</td></tr>
+      <tr><td class="mono">goals</td><td class="mono">id, user_id, title, description, category, horizon (3|6|12), target_date, priority (1-5), success_criteria, clarity_score, status, weekly_minutes_budget</td><td><code>status</code>: draft · active · at_risk · paused · achieved · archived. <code>weekly_minutes_budget</code> lo fija el planificador y lo usa el detector de conflictos.</td></tr>
+      <tr><td class="mono">goal_clarifications</td><td class="mono">goal_id, question, answer, asked_at</td><td>El diálogo de clarificación se guarda: es el mejor contexto para replanificar meses después.</td></tr>
+      <tr><td class="mono">plans</td><td class="mono">id, goal_id, version, status, rationale, created_by (ai|user), superseded_by</td><td><strong>Nunca se edita un plan</strong>: se crea la versión siguiente. Así el usuario ve la historia de sus propios cambios de rumbo.</td></tr>
+      <tr><td class="mono">stages</td><td class="mono">plan_id, idx, name, starts_on, ends_on, objective</td><td>Dos a cuatro etapas por objetivo. Más es ruido.</td></tr>
+      <tr><td class="mono">milestones</td><td class="mono">plan_id, stage_id, name, due_date, verification, status, achieved_at</td><td><code>verification</code> es texto verificable, no una intención: «mantener 10 min de conversación sin cambiar a español».</td></tr>
+      <tr><td class="mono">action_templates</td><td class="mono">plan_id, milestone_id, title, type, est_minutes, cadence, repeatable, difficulty, prerequisites, spacing_days, active</td><td>El <strong>banco de microacciones</strong>. <code>type</code>: learn · practice · produce · review · admin · connect. <code>cadence</code>: daily · weekly · once.</td></tr>
+      <tr><td class="mono">daily_plans</td><td class="mono">user_id, date, budget_minutes, planned_minutes, generated_at, generator_version, note</td><td>Una fila por día y usuario. Inmutable salvo reprogramación explícita.</td></tr>
+      <tr><td class="mono">daily_items</td><td class="mono">daily_plan_id, template_id, goal_id, title, est_minutes, priority, impact_note, position, score, status</td><td>El título es el redactado por la IA para <em>ese</em> día. <code>score</code> se guarda para poder depurar por qué se eligió.</td></tr>
+      <tr><td class="mono">checkins</td><td class="mono">daily_item_id, status (done|partial|skipped), actual_minutes, friction_note, at</td><td>Evento inmutable. Toda métrica se deriva de aquí.</td></tr>
+      <tr><td class="mono">signals</td><td class="mono">user_id, goal_id, date, completion_7d, completion_14d, velocity, projected_date, risk_level</td><td>Tabla derivada, recalculada cada noche. Evita recorrer el historial en cada consulta.</td></tr>
+      <tr><td class="mono">plan_revisions</td><td class="mono">goal_id, from_plan, to_plan, trigger, changes_json, explanation, accepted_at</td><td>El registro de <em>por qué</em> cambió el plan. Es lo que hace que la app se sienta honesta y no arbitraria.</td></tr>
+      <tr><td class="mono">reviews</td><td class="mono">user_id, kind (daily|weekly|monthly), period_start, metrics_json, narrative, recommendations_json</td><td>Los números se calculan; solo la narrativa es IA.</td></tr>
+      <tr><td class="mono">conflicts</td><td class="mono">user_id, detected_at, required_minutes, available_minutes, goal_ids, recommendation, resolved_at</td><td>Alimenta el aviso de «no te caben ocho objetivos».</td></tr>
+      <tr><td class="mono">coach_messages</td><td class="mono">thread_id, role, content, tool_calls, tokens, cost_usd</td><td>Historial del chat con las herramientas invocadas.</td></tr>
+      <tr><td class="mono">llm_traces</td><td class="mono">user_id, function, model, prompt_version, in_tok, out_tok, cache_read_tok, latency_ms, accepted</td><td><code>accepted</code> = si el usuario aceptó la salida. Es tu única métrica real de calidad de la IA.</td></tr>
+      <tr><td class="mono">embeddings</td><td class="mono">owner_type, owner_id, vector(1024), text</td><td>Fase 2, para la memoria del coach.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Núcleo en SQL</h3>
+  <div class="code wide"><span class="cm">-- La cadena que importa: objetivo → plan versionado → banco → día → evidencia</span>
+
+<span class="kw">CREATE TABLE</span> goals (
+  id              uuid <span class="kw">PRIMARY KEY</span>,
+  user_id         uuid <span class="kw">NOT NULL REFERENCES</span> users,
+  title           text <span class="kw">NOT NULL</span>,
+  category        text <span class="kw">NOT NULL</span>,
+  horizon_months  smallint <span class="kw">NOT NULL CHECK</span> (horizon_months <span class="kw">IN</span> (3, 6, 12)),
+  target_date     date <span class="kw">NOT NULL</span>,
+  priority        smallint <span class="kw">NOT NULL CHECK</span> (priority <span class="kw">BETWEEN</span> 1 <span class="kw">AND</span> 5),
+  success_criteria text <span class="kw">NOT NULL</span>,          <span class="cm">-- verificable, no aspiracional</span>
+  clarity_score   smallint,                     <span class="cm">-- 0-100, lo pone el clarificador</span>
+  weekly_minutes_budget int <span class="kw">NOT NULL</span>,
+  status          text <span class="kw">NOT NULL DEFAULT</span> 'draft'
+);
+
+<span class="kw">CREATE TABLE</span> plans (
+  id          uuid <span class="kw">PRIMARY KEY</span>,
+  goal_id     uuid <span class="kw">NOT NULL REFERENCES</span> goals,
+  version     int  <span class="kw">NOT NULL</span>,
+  rationale   text,                             <span class="cm">-- por qué este plan y no otro</span>
+  superseded_by uuid <span class="kw">REFERENCES</span> plans,
+  <span class="kw">UNIQUE</span> (goal_id, version)
+);
+
+<span class="kw">CREATE TABLE</span> action_templates (             <span class="cm">-- el banco de microacciones</span>
+  id           uuid <span class="kw">PRIMARY KEY</span>,
+  plan_id      uuid <span class="kw">NOT NULL REFERENCES</span> plans,
+  milestone_id uuid <span class="kw">REFERENCES</span> milestones,
+  title        text <span class="kw">NOT NULL</span>,
+  type         text <span class="kw">NOT NULL</span>,               <span class="cm">-- learn|practice|produce|review|admin|connect</span>
+  est_minutes  smallint <span class="kw">NOT NULL CHECK</span> (est_minutes <span class="kw">BETWEEN</span> 3 <span class="kw">AND</span> 45),
+  cadence      text <span class="kw">NOT NULL</span>,               <span class="cm">-- daily|weekly|once</span>
+  spacing_days smallint <span class="kw">DEFAULT</span> 0,          <span class="cm">-- repetición espaciada para 'review'</span>
+  difficulty   smallint <span class="kw">DEFAULT</span> 2,
+  active       boolean <span class="kw">DEFAULT true</span>
+);
+
+<span class="kw">CREATE TABLE</span> daily_items (
+  id            uuid <span class="kw">PRIMARY KEY</span>,
+  daily_plan_id uuid <span class="kw">NOT NULL REFERENCES</span> daily_plans,
+  template_id   uuid <span class="kw">REFERENCES</span> action_templates,
+  goal_id       uuid <span class="kw">NOT NULL REFERENCES</span> goals,
+  title         text <span class="kw">NOT NULL</span>,             <span class="cm">-- redactado por la IA para hoy</span>
+  est_minutes   smallint <span class="kw">NOT NULL</span>,
+  priority      smallint <span class="kw">NOT NULL</span>,
+  impact_note   text,
+  score         numeric(6,3),                  <span class="cm">-- por qué entró hoy: depurable</span>
+  position      smallint <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> checkins (
+  id            uuid <span class="kw">PRIMARY KEY</span>,
+  daily_item_id uuid <span class="kw">NOT NULL REFERENCES</span> daily_items <span class="kw">UNIQUE</span>,
+  status        text <span class="kw">NOT NULL CHECK</span> (status <span class="kw">IN</span> ('done','partial','skipped')),
+  actual_minutes smallint,
+  friction_note text,                          <span class="cm">-- opcional, una línea</span>
+  at            timestamptz <span class="kw">NOT NULL DEFAULT now</span>()
+);</div>
+
+  <div class="callout">
+    <p><strong>El pendiente no existe como entidad.</strong> Es la decisión de modelado más importante del producto. Una microacción no completada no se arrastra a mañana: caduca, y su información se convierte en una señal que modifica el plan. Si añades una tabla <code>pending_tasks</code>, en tres semanas tienes la lista de tareas culpabilizante que dijiste que no querías.</p>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Cómo integrar la IA</h2></div>
+
+  <p class="lede">No un prompt gigante que lo hace todo, sino <strong>siete funciones estrechas</strong>, cada una con su entrada acotada, su esquema de salida obligatorio y su modelo. La diferencia entre una demo y un producto está exactamente aquí.</p>
+
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Función</th><th>Entrada</th><th>Salida (estructurada)</th><th>Cuándo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Clarificador</strong></td><td>Texto libre del objetivo + categorías + perfil de capacidad</td><td class="mono">{clarity_score, is_measurable, questions[], proposed_title, success_criteria}</td><td>Al crear un objetivo</td></tr>
+      <tr><td><strong>Planificador</strong></td><td>Objetivo clarificado + respuestas + minutos semanales disponibles + fecha objetivo</td><td class="mono">{stages[], milestones[], action_templates[], weekly_minutes, rationale}</td><td>Una vez por objetivo, y en cada replanificación mayor</td></tr>
+      <tr><td><strong>Redactor del día</strong></td><td>Las 3–5 plantillas <em>ya elegidas</em> por el algoritmo + contexto de ayer</td><td class="mono">{items:[{title, impact_note}], day_note}</td><td>Cada madrugada</td></tr>
+      <tr><td><strong>Replanificador</strong></td><td>Plan vigente + señales de 14 días + fricción por tipo de acción</td><td class="mono">{severity, actions[], new_plan?, explanation, projected_date}</td><td>Semanal, o al dispararse una desviación</td></tr>
+      <tr><td><strong>Analista de revisión</strong></td><td>Métricas <em>ya calculadas</em> del periodo</td><td class="mono">{narrative, wins[], risks[], next_week_focus[]}</td><td>Domingo y fin de mes</td></tr>
+      <tr><td><strong>Detector de conflictos</strong></td><td>Todos los objetivos activos + capacidad + cumplimiento histórico</td><td class="mono">{feasible, required_minutes, recommend_keep[], recommend_pause[], reasoning}</td><td>Al añadir objetivo y semanalmente</td></tr>
+      <tr><td><strong>Coach</strong></td><td>Mensaje + herramientas sobre la API real</td><td>Texto + llamadas a herramientas</td><td>A demanda</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Seis reglas de integración</h3>
+  <ol>
+    <li><strong>Salida estructurada siempre.</strong> Cada función declara su esquema con <code>output_config: {format: {...}}</code>, o herramientas con <code>strict: true</code>. Nunca se parsea prosa. Si la salida no valida contra Zod, se reintenta una vez y luego se cae a un plan de respaldo determinista.</li>
+    <li><strong>La IA propone, el sistema dispone.</strong> Toda salida pasa por validadores duros antes de tocar la base de datos: la suma de minutos no puede superar el presupuesto, ninguna microacción puede durar más de 45 minutos, los hitos no pueden caer después de la fecha objetivo, no puede haber más de cinco ítems en un día. Lo que no valida se corrige o se descarta, no se muestra.</li>
+    <li><strong>Contexto compacto y estable.</strong> Se construye un <em>paquete de contexto</em> por función — nunca «toda la base de datos». Para el redactor del día: objetivo, hito activo, las plantillas elegidas, y siete días de historial resumido. Unos 3–6k tokens, no 50k.</li>
+    <li><strong>Caché de prompts.</strong> El bloque estable (instrucciones, taxonomía de categorías, definición de tipos de acción, esquemas) va primero y cacheado; lo volátil (fecha, señales de hoy) va después del último punto de corte. Verifica con <code>usage.cache_read_input_tokens</code>: si sale cero llamada tras llamada, algo volátil se coló en el prefijo.</li>
+    <li><strong>Idempotencia y coste acotado.</strong> La generación diaria lleva clave <code>(user_id, date, generator_version)</code>: reintentar un trabajo no genera dos días ni cobra dos veces. Un tope duro de gasto por usuario y día corta cualquier bucle.</li>
+    <li><strong>Todo se traza y se evalúa.</strong> Cada llamada guarda modelo, versión de prompt, tokens, coste y si el usuario aceptó el resultado. Con eso montas un conjunto de evaluación de 30–50 objetivos reales y puedes cambiar de modelo o de prompt sabiendo si mejoraste, en vez de creyéndolo.</li>
+  </ol>
+
+  <div class="callout">
+    <p><strong>La trampa a evitar.</strong> Es tentador pedirle al modelo «dame las acciones de hoy» con todo el historial en el prompt. Funciona en la demo y falla a los diez días: elige acciones incoherentes, ignora el presupuesto de minutos, se olvida de objetivos enteros y no se puede depurar. La selección debe ser <em>algoritmo</em> (§10); el modelo solo redacta, prioriza empates y explica.</p>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Qué modelo usar, y cuánto cuesta</h2></div>
+
+  <p class="lede">Recomiendo la <strong>API de Claude</strong> como proveedor primario, con tres niveles asignados por función: razonamiento caro donde es infrecuente, modelo intermedio donde es diario, y modelo barato donde es mecánico.</p>
+
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Función</th><th>Modelo</th><th class="num-col">$ / 1M in</th><th class="num-col">$ / 1M out</th><th>Motivo</th></tr></thead>
+    <tbody>
+      <tr><td>Planificador · Replanificador · Detector de conflictos</td><td class="mono">claude-opus-5</td><td class="num-col">5.00</td><td class="num-col">25.00</td><td>Es donde se juega la calidad del producto y ocurre pocas veces por objetivo. Con <code>thinking: {type:"adaptive"}</code>.</td></tr>
+      <tr><td>Coach · Clarificador · Analista de revisión</td><td class="mono">claude-sonnet-5</td><td class="num-col">2.00</td><td class="num-col">10.00</td><td>Conversación y síntesis diarias con buena relación calidad-latencia.</td></tr>
+      <tr><td>Redactor del día · clasificación de categorías</td><td class="mono">claude-haiku-4-5</td><td class="num-col">1.00</td><td class="num-col">5.00</td><td>La decisión ya la tomó el algoritmo; aquí solo se redacta con un esquema fijo.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>Coste estimado por usuario activo</h4>
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Concepto</th><th class="num-col">Frecuencia</th><th class="num-col">Coste</th></tr></thead>
+    <tbody>
+      <tr><td>Plan inicial de un objetivo (Opus 5)</td><td class="num-col">1 × objetivo</td><td class="num-col">~$0,18</td></tr>
+      <tr><td>Generación diaria (Haiku 4.5, con caché)</td><td class="num-col">30 / mes</td><td class="num-col">~$0,45</td></tr>
+      <tr><td>Coach (Sonnet 5)</td><td class="num-col">~40 mensajes / mes</td><td class="num-col">~$1,00</td></tr>
+      <tr><td>Replanificación semanal (Opus 5)</td><td class="num-col">4 / mes</td><td class="num-col">~$0,65</td></tr>
+      <tr><td>Informe mensual (Opus 5)</td><td class="num-col">1 / mes</td><td class="num-col">~$0,35</td></tr>
+      <tr><td><strong>Total mensual, usuario con 5 objetivos</strong></td><td class="num-col">—</td><td class="num-col"><strong>~$2,50 – $4,00</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>Detalles que importan al implementar</h4>
+  <ul>
+    <li><strong>Salida estructurada:</strong> <code>output_config: {format: {…}}</code> en <code>messages.create()</code>, o herramientas con <code>strict: true</code> y <code>additionalProperties: false</code>. No uses el antiguo <code>output_format</code>.</li>
+    <li><strong>Pensamiento adaptativo:</strong> <code>thinking: {type: "adaptive"}</code> en el planificador y el replanificador. <code>budget_tokens</code> ya no existe en estos modelos; la profundidad se regula con <code>output_config.effort</code> (<code>low</code> … <code>max</code>).</li>
+    <li><strong>Caché de prompts:</strong> orden de renderizado <code>tools → system → messages</code>. El prefijo estable primero; cualquier byte que cambie invalida todo lo posterior. Nada de <code>new Date()</code> en el bloque de sistema.</li>
+    <li><strong>Lotes:</strong> las revisiones mensuales de todos los usuarios pueden ir por la Batch API a mitad de precio, porque no son sensibles a latencia.</li>
+    <li><strong>Independencia de proveedor:</strong> el gateway expone <code>generate(fn, input, schema)</code>. Cambiar de modelo, o añadir otro proveedor si algún día lo quieres, es tocar un archivo. Nunca llames al SDK desde la lógica de negocio.</li>
+  </ul>
+
+  <p><strong>Sobre pedir un modelo más barato:</strong> el ahorro real no viene de bajar de modelo, viene de la caché de prompts y de que el redactor diario reciba solo lo que necesita. Con caché bien puesta, la generación diaria baja un 60–80 %. Baja de modelo solo después de medirlo con tu conjunto de evaluación.</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <div class="sec-head"><span class="sec-num">10</span><h2>El algoritmo: de objetivo a microacción diaria</h2></div>
+
+  <p class="lede">Seis pasos. Los pasos 1, 2 y 6 usan IA; los pasos 3, 4 y 5 son aritmética. Esa separación es lo que hace el sistema fiable.</p>
+
+  <h3>Paso 1 · Normalizar el objetivo <span class="chip c-mute">IA</span></h3>
+  <p>El clarificador puntúa de 0 a 100 cuatro dimensiones: si el resultado es observable, si hay una fecha, si existe un criterio de cumplimiento verificable y si el alcance es realista para el horizonte. Por debajo de 70 se abre el diálogo. Nunca más de cuatro preguntas: la quinta pregunta es donde el usuario abandona.</p>
+
+  <h3>Paso 2 · Planificar hacia atrás <span class="chip c-mute">IA</span></h3>
+  <p>Desde la fecha objetivo hacia hoy, no al revés. Se generan de dos a cuatro etapas, y por cada etapa uno o dos hitos con fecha y criterio de verificación. Regla dura: <strong>el primer hito no puede estar a más de tres semanas</strong>. Un objetivo a doce meses cuyo primer hito llega en el mes cuatro se abandona en la semana dos.</p>
+
+  <h3>Paso 3 · Presupuestar la carga <span class="chip c-ok">determinista</span></h3>
+  <div class="formula">semanas_disponibles = (fecha_objetivo − hoy) / 7
+carga_semanal(objetivo) = min(
+    esfuerzo_estimado_total / semanas_disponibles,
+    capacidad_semanal × peso_prioridad(objetivo)
+)
+
+donde  peso_prioridad = prioridad / Σ prioridades de objetivos activos</div>
+  <p>Si la primera rama es mayor que la segunda, el objetivo <em>no cabe</em> con el tiempo declarado. Ahí es donde se dispara el detector de conflictos (§1) antes de generar un plan que va a fallar.</p>
+
+  <h3>Paso 4 · Construir el banco de microacciones <span class="chip c-mute">IA</span> <span class="chip c-ok">validado</span></h3>
+  <p>Por cada hito, la IA genera de 8 a 15 plantillas, cada una con tipo, duración estimada y cadencia. Los seis tipos existen para forzar variedad — un plan que solo tiene <code>learn</code> es un plan que no produce nada:</p>
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Tipo</th><th>Qué es</th><th>Ejemplo (objetivo de inglés)</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">learn</td><td>Adquirir material nuevo</td><td>Aprender 5 palabras de tu vocabulario de trabajo</td></tr>
+      <tr><td class="mono">practice</td><td>Aplicar bajo condiciones reales</td><td>10 min de conversación hablada con IA</td></tr>
+      <tr><td class="mono">produce</td><td>Dejar un artefacto</td><td>Escribir 5 frases usando el vocabulario de esta semana</td></tr>
+      <tr><td class="mono">review</td><td>Consolidar lo anterior (repetición espaciada)</td><td>Repasar el vocabulario de hace 1, 3 y 7 días</td></tr>
+      <tr><td class="mono">admin</td><td>Preparar el terreno</td><td>Elegir tres podcasts y dejarlos descargados</td></tr>
+      <tr><td class="mono">connect</td><td>Involucrar a otra persona</td><td>Pedir a un colega una reunión de 15 min en inglés</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Restricciones que el validador impone sobre la salida: duración entre 3 y 45 minutos, título en imperativo con una sola acción, y una cantidad concreta («5 palabras», no «algo de vocabulario»). Una plantilla sin cantidad no es verificable y se rechaza.</p>
+
+  <h3>Paso 5 · Seleccionar el día <span class="chip c-ok">determinista</span></h3>
+  <p>Aquí es donde el producto se gana o se pierde. Es una mochila con restricciones, no una llamada al modelo.</p>
+
+  <div class="formula">score(t) = 0,30 · urgencia_hito(t)      <span style="opacity:.7">— días hasta el hito / duración de la etapa</span>
+         + 0,25 · peso_prioridad(objetivo)
+         + 0,20 · deuda(objetivo)        <span style="opacity:.7">— avance esperado − avance real</span>
+         + 0,15 · vencimiento_repaso(t)  <span style="opacity:.7">— repetición espaciada de tipo 'review'</span>
+         + 0,10 · impulso(objetivo)      <span style="opacity:.7">— racha reciente, premia continuidad</span>
+         − 0,20 · fatiga(t)              <span style="opacity:.7">— saltada 2+ veces en 14 días</span></div>
+
+  <div class="code wide"><span class="kw">function</span> seleccionarDia(usuario, fecha) {
+  <span class="kw">const</span> presupuesto = capacidad(usuario, diaSemana(fecha));   <span class="cm">// p. ej. 45 min</span>
+  <span class="kw">const</span> candidatas = plantillasElegibles(usuario, fecha);     <span class="cm">// cadencia, prerequisitos, spacing</span>
+
+  candidatas.sort(porScoreDescendente);
+
+  <span class="kw">const</span> dia = [];
+  <span class="kw">let</span> minutos = 0;
+  <span class="kw">const</span> porObjetivo = <span class="kw">new</span> Map();
+
+  <span class="kw">for</span> (<span class="kw">const</span> t <span class="kw">of</span> candidatas) {
+    <span class="kw">if</span> (dia.length >= 5) <span class="kw">break</span>;
+    <span class="kw">if</span> (minutos + t.est_minutes > presupuesto) <span class="kw">continue</span>;
+    <span class="kw">if</span> ((porObjetivo.get(t.goal_id) ?? 0) >= 2) <span class="kw">continue</span>;   <span class="cm">// máx. 2 por objetivo</span>
+    dia.push(t); minutos += t.est_minutes;
+    porObjetivo.set(t.goal_id, (porObjetivo.get(t.goal_id) ?? 0) + 1);
+  }
+
+  <span class="cm">// Reglas de composición, en este orden:</span>
+  garantizarUnaAccionDeCincoMinutos(dia);      <span class="cm">// siempre una victoria barata</span>
+  garantizarMinimoDosObjetivos(dia, candidatas);
+  <span class="kw">if</span> (dia.length &lt; 3) rellenarConRepasos(dia, presupuesto − minutos);
+  <span class="kw">if</span> (esFinDeSemana(fecha)) reducirA(dia, 3);
+
+  <span class="kw">return</span> dia;  <span class="cm">// → al redactor IA, que solo escribe títulos e impacto</span>
+}</div>
+
+  <h3>Paso 6 · Redactar <span class="chip c-mute">IA</span></h3>
+  <p>La IA recibe las plantillas ya elegidas y escribe el título del día — concreto, en segunda persona, con la cantidad y el enganche con ayer («repasa las 5 palabras de ayer», no «repasa vocabulario») — más una frase de impacto para el día completo. Si esta llamada falla, se muestran los títulos de plantilla tal cual: la app funciona sin IA ese día. Esa degradación elegante es obligatoria.</p>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Replanificación automática</h2></div>
+
+  <p class="lede">El principio que gobierna todo este módulo: <strong>el plan se adapta al comportamiento, no al revés</strong>. Y cada ajuste se explica, porque un sistema que cambia tu plan sin decirte por qué se siente roto aunque acierte.</p>
+
+  <h3>Señales, recalculadas cada noche</h3>
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Señal</th><th>Cálculo</th><th>Qué revela</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">completion_7d</td><td>completadas / planificadas, últimos 7 días (parcial = 0,5)</td><td>Si el volumen diario es realista</td></tr>
+      <tr><td class="mono">velocity</td><td>minutos reales / minutos planificados por objetivo</td><td>Si la estimación de duración miente</td></tr>
+      <tr><td class="mono">projected_date</td><td>trabajo restante / velocidad actual</td><td>La fecha real de cumplimiento</td></tr>
+      <tr><td class="mono">slippage</td><td>projected_date − target_date, en días</td><td>El semáforo del objetivo</td></tr>
+      <tr><td class="mono">type_friction</td><td>tasa de omisión por tipo de acción</td><td>Que odias <code>produce</code> los martes</td></tr>
+      <tr><td class="mono">time_of_day</td><td>hora mediana de los check-ins completados</td><td>Cuándo enviar el recordatorio</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>Semáforo del objetivo</h4>
+  <p><span class="chip c-ok">En camino</span> slippage ≤ 7 días · <span class="chip c-warn">Atención</span> 8–21 días o cumplimiento &lt; 60 % · <span class="chip c-risk">En riesgo</span> &gt; 21 días, o dos hitos consecutivos incumplidos.</p>
+
+  <h3>Disparadores</h3>
+  <ul>
+    <li><strong>Diario, determinista, sin IA.</strong> Cada noche: caducar lo no hecho, recalcular señales, reordenar el banco. Sin coste y sin ruido.</li>
+    <li><strong>Por evento.</strong> Tres días seguidos por debajo del 50 %, o un hito vencido: se dispara el replanificador esa misma noche.</li>
+    <li><strong>Semanal.</strong> Domingo: revisión con IA y una única propuesta de ajuste, aceptable de un toque.</li>
+    <li><strong>Mensual.</strong> Análisis profundo con reproyección de todos los hitos.</li>
+    <li><strong>A petición.</strong> «Solo tengo 30 minutos hoy», «me voy de viaje», «voy atrasado con esto».</li>
+  </ul>
+
+  <h3>La escalera de ajuste</h3>
+  <p>Se sube un peldaño solo si el anterior no bastó. Nunca se salta al peldaño 5 porque una semana salió mal.</p>
+
+  <ol class="ladder">
+    <li><span class="rname">Reordenar</span><span class="rbody">Mismo volumen, distinto orden y distinto momento del día. Coste cero, sin coste emocional. Cubre la mayoría de las malas semanas.</span></li>
+    <li><span class="rname">Reducir la dosis</span><span class="rbody">Las mismas acciones, más cortas: 15 min → 8 min. Preserva la continuidad del hábito, que es lo que realmente se está protegiendo.</span></li>
+    <li><span class="rname">Sustituir el tipo</span><span class="rbody">Si <code>type_friction</code> muestra que sistemáticamente saltas <code>produce</code>, se cambia por <code>practice</code> o <code>review</code> con la misma contribución al hito.</span></li>
+    <li><span class="rname">Mover el hito</span><span class="rbody">Se desplaza la fecha del hito y se recalcula la cadena. <strong>Requiere confirmación del usuario</strong>: mover una fecha sin avisar destruye la confianza en el sistema.</span></li>
+    <li><span class="rname">Renegociar el objetivo</span><span class="rbody">Reducir el alcance («conversación profesional» → «reunión de 15 minutos sobre tu especialidad»), o mover la fecha objetivo. Siempre con dos opciones concretas, nunca abierto.</span></li>
+    <li><span class="rname">Proponer una pausa</span><span class="rbody">Con evidencia y sin juicio: «Llevas 24 días sin avanzar en esto y tienes tres objetivos que sí avanzan. ¿Lo pausamos hasta enero?» Pausar libera minutos que se redistribuyen automáticamente.</span></li>
+  </ol>
+
+  <h3>El contrato con el usuario</h3>
+  <ul>
+    <li><strong>Los peldaños 1 a 3 se aplican solos</strong> y se comunican en una línea al día siguiente: «Bajé tu práctica de conversación a 8 minutos porque las de 15 se te estaban quedando a medias.»</li>
+    <li><strong>Los peldaños 4 a 6 se proponen</strong> y esperan un toque. Nunca cambian una fecha ni pausan nada sin permiso.</li>
+    <li><strong>Todo cambio queda en <code>plan_revisions</code></strong> con su disparador y su explicación, visible en el detalle del objetivo. El usuario siempre puede ver la versión anterior y volver a ella.</li>
+    <li><strong>Un cambio por semana como máximo</strong>, salvo petición explícita. Un plan que se reescribe cada dos días no es un plan.</li>
+  </ul>
+
+  <div class="callout">
+    <p><strong>Y la pregunta que el usuario realmente hace:</strong> «¿sigo en camino?». La respuesta debe ser una frase con un número, siempre disponible: <em>«Al ritmo de las últimas dos semanas llegas el 12 de diciembre, 18 días después de tu fecha. Con 10 minutos más al día, llegas a tiempo.»</em> Eso es <code>projected_date</code> más una simulación de la capacidad. Es barato de calcular y es lo que hace que la app se sienta inteligente.</p>
+  </div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="s12">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Propuesta de UX / UI</h2></div>
+
+  <h3>Cinco principios</h3>
+  <ol>
+    <li><strong>El plan es invisible hasta que lo pides.</strong> La pantalla por defecto no muestra objetivos, ni etapas, ni progreso. Muestra cuatro cosas que hacer hoy. Todo lo demás está a un toque de distancia, no en la cara.</li>
+    <li><strong>Cero acumulación visible.</strong> No hay badges con números de pendientes, ni contadores rojos, ni «tienes 23 tareas atrasadas». Lo no hecho desaparece y reaparece transformado.</li>
+    <li><strong>Marcar debe costar un toque.</strong> El check-in de tres estados aparece al mantener pulsado o en el cierre del día; el toque simple es «hecho». La fricción del registro es la variable que mata a estas apps.</li>
+    <li><strong>La IA habla poco y siempre en concreto.</strong> Una frase al día, con un número dentro. Nada de «¡sigue así, vas genial!». Si no hay nada útil que decir, no se dice nada.</li>
+    <li><strong>Ningún día es un fracaso.</strong> Un día en cero se muestra como un dato del plan, no como una falta. El lenguaje de toda la app evita «fallaste», «perdiste», «pendiente».</li>
+  </ol>
+
+  <h3>Sistema visual</h3>
+  <ul>
+    <li><strong>El horizonte es color</strong>, y es la única codificación cromática del producto: <span class="chip c-h3">3 meses</span> <span class="chip c-h6">6 meses</span> <span class="chip c-h12">12 meses</span>. Se aprende en un día y funciona en cualquier pantalla sin leyenda.</li>
+    <li><strong>El estado es forma más color</strong>, nunca color solo: una barra de severidad en el borde de la tarjeta más el chip de texto, para que funcione con daltonismo y en escala de grises.</li>
+    <li><strong>Tipografía en dos voces:</strong> una sans de estructura para títulos, etiquetas y datos; una serif de lectura para las narrativas de la IA — las revisiones se leen, no se escanean, y la serif lo señala sin decirlo.</li>
+    <li><strong>Números tabulares</strong> en toda métrica y duración, para que las columnas no bailen.</li>
+    <li><strong>Densidad baja en «Hoy», alta en el dashboard.</strong> Son dos modos de lectura distintos y no deben parecerse.</li>
+  </ul>
+
+  <h3>Microcopy: el ejemplo que define el tono</h3>
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Situación</th><th>No</th><th>Sí</th></tr></thead>
+    <tbody>
+      <tr><td>Día sin completar nada</td><td>«No completaste ninguna tarea 😔»</td><td>«Ayer no salió. Hoy dejé solo dos cosas, 12 minutos.»</td></tr>
+      <tr><td>Objetivo en riesgo</td><td>«⚠️ Objetivo en riesgo»</td><td>«Al ritmo actual llegas 18 días tarde. Te propongo dos ajustes.»</td></tr>
+      <tr><td>Racha</td><td>«¡12 días seguidos! 🔥»</td><td>«12 días seguidos. El hito de conversación está a 9 días.»</td></tr>
+      <tr><td>Demasiados objetivos</td><td>«Has superado el límite recomendado»</td><td>«Ocho objetivos piden 11 h/semana y tienes 5. Estos tres avanzan; los otros llevan tres semanas parados.»</td></tr>
+      <tr><td>Acción a medias</td><td>«Tarea incompleta»</td><td>«A medias — cuenta. Mañana la dejo en 8 minutos.»</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Accesibilidad y detalles no negociables</h3>
+  <ul>
+    <li>Contraste AA en ambos temas; el estado nunca depende solo del color.</li>
+    <li>Objetivos táctiles de 44 px mínimo; el check es el elemento más grande de la tarjeta.</li>
+    <li>Tipografía escalable con los ajustes del sistema hasta 200 % sin romper el diseño.</li>
+    <li>«Hoy» funciona sin conexión desde la caché; los check-ins se sincronizan al reconectar.</li>
+    <li>Etiquetas de lectores de pantalla en cada acción: título, duración, objetivo y estado, en ese orden.</li>
+  </ul>
+</section>
+
+<!-- ============ 13 ============ -->
+<section id="s13">
+  <div class="sec-head"><span class="sec-num">13</span><h2>Complejidad técnica y plan de construcción</h2></div>
+
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Módulo</th><th>Complejidad</th><th class="num-col">Esfuerzo</th><th>Dónde está la dificultad real</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Auth, cuenta, perfil de capacidad</strong></td><td><span class="chip c-ok">Baja</span></td><td class="num-col">3–4 d</td><td>Ninguna. Servicio gestionado.</td></tr>
+      <tr><td><strong>CRUD de objetivos y horizontes</strong></td><td><span class="chip c-ok">Baja</span></td><td class="num-col">4–5 d</td><td>Ninguna, salvo acertar el esquema a la primera.</td></tr>
+      <tr><td><strong>Clarificador con IA</strong></td><td><span class="chip c-warn">Media</span></td><td class="num-col">5–7 d</td><td>Saber cuándo parar de preguntar. La calidad está en el prompt, no en el código.</td></tr>
+      <tr><td><strong>Planificador (objetivo → plan)</strong></td><td><span class="chip c-risk">Alta</span></td><td class="num-col">12–18 d</td><td><strong>El módulo más difícil.</strong> Planes coherentes, con hitos verificables y carga realista, para categorías tan distintas como salud, finanzas y aprendizaje. Se resuelve iterando prompts contra un conjunto de evaluación real.</td></tr>
+      <tr><td><strong>Selector diario</strong></td><td><span class="chip c-warn">Media</span></td><td class="num-col">8–10 d</td><td>El algoritmo es sencillo; calibrar los pesos y las reglas de composición es lo que lleva tiempo. Empieza con los pesos de §10 y ajústalos con datos reales.</td></tr>
+      <tr><td><strong>Redactor del día + trabajo nocturno</strong></td><td><span class="chip c-warn">Media</span></td><td class="num-col">5–7 d</td><td>Zonas horarias, idempotencia y degradación cuando el LLM falla.</td></tr>
+      <tr><td><strong>Check-in y señales</strong></td><td><span class="chip c-ok">Baja</span></td><td class="num-col">4–6 d</td><td>Solo aritmética, pero es el cimiento de todo lo demás. Hay que hacerlo bien.</td></tr>
+      <tr><td><strong>Motor de replanificación</strong></td><td><span class="chip c-risk">Alta</span></td><td class="num-col">10–14 d</td><td>Decidir el peldaño correcto y explicarlo de forma creíble. Y no reescribir el plan demasiado a menudo.</td></tr>
+      <tr><td><strong>Revisiones diaria / semanal / mensual</strong></td><td><span class="chip c-warn">Media</span></td><td class="num-col">6–8 d</td><td>Los números son fáciles; que la narrativa aporte algo que el usuario no vea solo, no.</td></tr>
+      <tr><td><strong>Dashboard</strong></td><td><span class="chip c-warn">Media</span></td><td class="num-col">6–8 d</td><td>Consultas de series temporales y elegir qué <em>no</em> mostrar.</td></tr>
+      <tr><td><strong>Coach con herramientas</strong></td><td><span class="chip c-risk">Alta</span></td><td class="num-col">10–14 d</td><td>Bucle de herramientas, streaming, y sobre todo evitar que el coach modifique el plan de formas que rompan las invariantes.</td></tr>
+      <tr><td><strong>Detector de conflictos</strong></td><td><span class="chip c-ok">Baja</span></td><td class="num-col">3–4 d</td><td>La aritmética es trivial; el tono del aviso es lo delicado.</td></tr>
+      <tr><td><strong>Gateway LLM, trazas, evaluación</strong></td><td><span class="chip c-warn">Media</span></td><td class="num-col">6–8 d</td><td>Trabajo invisible que decide si puedes mejorar el producto después. No lo dejes para el final.</td></tr>
+      <tr><td><strong>Notificaciones locales</strong></td><td><span class="chip c-ok">Baja</span></td><td class="num-col">2–3 d</td><td>Permisos por plataforma.</td></tr>
+      <tr><td><strong>Integraciones (calendario, salud, correo)</strong></td><td><span class="chip c-risk">Alta</span></td><td class="num-col">15–25 d</td><td>OAuth por proveedor, sincronía bidireccional, revisión de tienda por permisos de salud. Por eso están en fase 2 y 3.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="mono" style="color:var(--muted);font-size:12.5px">MVP ≈ 75–100 días-persona. Con una persona a tiempo completo: 4–5 meses. Con dos: 2,5–3 meses.</p>
+
+  <h3>Orden de construcción, 12 semanas</h3>
+  <div class="tw wide">
+  <table>
+    <thead><tr><th class="num-col">Semanas</th><th>Entrega</th><th>Cómo sabes que va bien</th></tr></thead>
+    <tbody>
+      <tr><td class="num-col">1–2</td><td>Esquema, auth, CRUD de objetivos, perfil de capacidad, gateway LLM con trazas</td><td>Puedes crear un objetivo y ver una traza de LLM guardada</td></tr>
+      <tr><td class="num-col">3–5</td><td><strong>Planificador</strong> + banco de microacciones + conjunto de evaluación con 30 objetivos reales</td><td>Sobre 30 objetivos variados, ≥ 80 % de los planes son aceptables sin editar</td></tr>
+      <tr><td class="num-col">6–7</td><td><strong>Selector diario</strong>, trabajo nocturno, pantalla «Hoy», check-in</td><td>Recibes tu día automáticamente durante siete días seguidos</td></tr>
+      <tr><td class="num-col">8–9</td><td><strong>Señales y replanificación</strong>, peldaños 1–3 automáticos, cierre del día</td><td>Saltas tres días a propósito y el plan se reduce solo, con explicación</td></tr>
+      <tr><td class="num-col">10</td><td>Revisión semanal + dashboard mínimo</td><td>El domingo llega una propuesta útil que aceptas de un toque</td></tr>
+      <tr><td class="num-col">11</td><td>Coach con tres herramientas + detector de conflictos</td><td>«Solo tengo 30 minutos» reprograma el día correctamente</td></tr>
+      <tr><td class="num-col">12</td><td>Notificaciones, offline, pulido, uso propio en serio</td><td>Lo usas tú 30 días seguidos sin querer arreglarlo cada mañana</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Los cuatro riesgos que de verdad pueden hundirlo</h3>
+  <div class="tw wide">
+  <table>
+    <thead><tr><th>Riesgo</th><th>Señal temprana</th><th>Mitigación</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Los planes generados son genéricos</strong> («estudia inglés 30 min») y el usuario no los respeta</td><td>Editas más del 40 % de las microacciones generadas</td><td>Conjunto de evaluación desde la semana 3; validador que rechaza toda acción sin cantidad concreta; ejemplos por categoría en el prompt del planificador</td></tr>
+      <tr><td><strong>Fatiga del check-in</strong>: dejas de marcar y el sistema se queda ciego</td><td>Cumplimiento registrado cae mientras el uso de la app sigue</td><td>Un toque para marcar; cierre del día de 20 s; y tratar la ausencia de datos como señal («¿seguimos con esto?»), no como fallo</td></tr>
+      <tr><td><strong>La replanificación es demasiado agresiva</strong> y el plan pierde estabilidad</td><td>Más de un cambio de plan por semana</td><td>La escalera con confirmación en los peldaños 4–6, y el límite duro de un ajuste semanal</td></tr>
+      <tr><td><strong>Coste de IA por usuario fuera de control</strong></td><td>Coste mensual por usuario por encima de $6</td><td>Caché de prompts, redactor diario en el modelo barato, tope de gasto diario por usuario, informes mensuales por lotes</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ============ cierre ============ -->
+<section id="cierre">
+  <div class="sec-head"><span class="sec-num">→</span><h2>Qué construir primero</h2></div>
+
+  <p class="lede">Si tuviera que reducir esta propuesta a una sola recomendación: <strong>construye las semanas 1 a 9 y úsalo tú, solo, durante un mes antes de añadir nada más.</strong></p>
+
+  <p>El planificador y el selector diario son el producto entero. El dashboard, el coach y las integraciones son mejoras sobre un núcleo que funciona — y son inútiles sobre uno que no. La prueba que importa no es que la demo genere un plan bonito el día uno; es que el día veintitrés, después de una semana mala, la app te dé cuatro cosas pequeñas y creíbles y te diga honestamente si sigues en camino.</p>
+
+  <p>Tres cosas del diseño que propongo son deliberadamente contraintuitivas y merecen que las defiendas cuando tengas la tentación de cambiarlas: <strong>la selección diaria no la hace el modelo</strong> (§10), <strong>los pendientes no se acumulan porque no existen</strong> (§7), y <strong>se pregunta por el tiempo disponible antes que por los objetivos</strong> (§3). Las tres van contra lo que hace la mayoría de apps de productividad, y las tres son la razón por la que esta podría funcionar donde esas fallan.</p>
+
+  <div class="footer">
+    Propuesta de arquitectura funcional y técnica · Tres Horizontes<br>
+    Núcleo: objetivo → plan → microacción diaria → replanificación con IA<br>
+    Estimaciones de coste calculadas con las tarifas vigentes de la API de Claude en la fecha de este documento; conviene revalidarlas antes de fijar precios.
+  </div>
+</section>
+
+</main>
+</div>
