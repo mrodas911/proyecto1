@@ -1,0 +1,547 @@
+// Plataforma de Planes de Desarrollo Individual (PDI) — metodología 70-20-10
+// Arquitectura multiempresa: todo dato de negocio cuelga de `companyId`.
+// El contenido de catálogo (competencias, herramientas, actividades) admite
+// `companyId = null` => contenido global administrado por el superadministrador.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────── enums ──────
+
+enum Role {
+  SUPERADMIN
+  COMPANY_ADMIN
+  LEADER
+  EMPLOYEE
+}
+
+enum Methodology {
+  M10 // Aprendizaje formal
+  M20 // Aprendizaje social
+  M70 // Experiencias en el trabajo
+}
+
+/// Para qué tipo de plan sirve un contenido del catálogo.
+enum DevelopmentType {
+  CURRENT
+  FUTURE
+  BOTH
+}
+
+/// Objetivo del plan (paso 2 del asistente).
+enum ObjectiveType {
+  CURRENT_ROLE // Fortalecer el desempeño en la posición actual
+  FUTURE_ROLE // Prepararse para una posición futura
+}
+
+enum Horizon {
+  LT_12M
+  M12_24
+  GT_24M
+}
+
+enum PlanStatus {
+  DRAFT
+  FINALIZED
+  DOWNLOADED
+  IN_PROGRESS // reservado para fase 2 (seguimiento)
+  COMPLETED // reservado para fase 2
+}
+
+enum RatingLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+/// Aspiración de carrera: tercer eje del diagnóstico.
+enum Aspiration {
+  GROW_LEADERSHIP // Asumir responsabilidades de liderazgo
+  GROW_SPECIALIST // Profundizar como especialista/experto
+  LATERAL_MOVE // Moverse a otra área o función
+  CONSOLIDATE // Consolidarse en su rol actual
+  UNDEFINED // Aún no definida
+}
+
+enum DiagnosticSource {
+  EXISTING // Tomado de evaluaciones ya cargadas en la plataforma
+  MANUAL // Registrado por el líder durante el asistente
+}
+
+enum ResponsibleType {
+  EMPLOYEE
+  LEADER
+  MENTOR
+  HR
+  OTHER
+}
+
+enum Difficulty {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CompetencyCategory {
+  LEADERSHIP
+  BUSINESS
+  INTERPERSONAL
+  STRATEGIC
+  EXECUTION
+}
+
+// ────────────────────────────────────────────────────── multiempresa ────────
+
+model Company {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  logoUrl        String?
+  primaryColor   String?  @default("#1F5F5B")
+  /// Portada personalizada del PDF (white-label parcial).
+  pdfCoverNote   String?
+  active         Boolean  @default(true)
+  maxUsers       Int      @default(25)
+  /// Plan comercial: preparado para tarifas diferenciadas por empresa.
+  commercialPlan String   @default("STARTER")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  users        User[]
+  employees    Employee[]
+  positions    Position[]
+  competencies Competency[]
+  tools        DevelopmentTool[]
+  activities   Activity[]
+  plans        DevelopmentPlan[]
+  accessCodes  AccessCode[]
+  settings     CompanySetting[]
+  auditLogs    AuditLog[]
+  pdfExports   PdfExport[]
+  diagnostics  Diagnostic[]
+  perfEvals    PerformanceEvaluation[]
+  potEvals     PotentialEvaluation[]
+
+  @@index([active])
+}
+
+/// Reglas configurables por empresa (sobrescriben las globales).
+/// Evita "hardcodear" la regla 5/8 y el máximo de competencias.
+model CompanySetting {
+  id        String   @id @default(cuid())
+  companyId String?
+  key       String
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, key])
+  @@index([key])
+}
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  passwordHash   String
+  firstName      String
+  lastName       String
+  role           Role
+  active         Boolean   @default(true)
+  companyId      String?
+  /// Vínculo opcional al registro de colaborador (para el rol EMPLOYEE).
+  employeeId     String?   @unique
+  lastLoginAt    DateTime?
+  /// Recuperación de contraseña
+  resetTokenHash String?
+  resetTokenExp  DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  company      Company?          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee     Employee?         @relation("EmployeeAccount", fields: [employeeId], references: [id], onDelete: SetNull)
+  createdPlans DevelopmentPlan[] @relation("PlanAuthor")
+  auditLogs    AuditLog[]
+  pdfExports   PdfExport[]
+
+  @@index([companyId, role])
+}
+
+model Position {
+  id        String  @id @default(cuid())
+  companyId String
+  title     String
+  area      String?
+  /// Nivel jerárquico: 1 operativo … 6 dirección
+  level     Int     @default(3)
+
+  company       Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employees     Employee[]
+  targetOfPlans DevelopmentPlan[] @relation("TargetPosition")
+
+  @@unique([companyId, title])
+  @@index([companyId])
+}
+
+model Employee {
+  id             String    @id @default(cuid())
+  companyId      String
+  firstName      String
+  lastName       String
+  email          String?
+  area           String?
+  positionId     String?
+  positionTitle  String?
+  managerName    String?
+  /// Líder responsable dentro de la plataforma (usuario con rol LEADER).
+  leaderUserId   String?
+  location       String?
+  hiredAt        DateTime?
+  hierarchyLevel Int?
+  businessUnit   String?
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  position Position? @relation(fields: [positionId], references: [id], onDelete: SetNull)
+  account  User?     @relation("EmployeeAccount")
+
+  plans       DevelopmentPlan[]
+  perfEvals   PerformanceEvaluation[]
+  potEvals    PotentialEvaluation[]
+  diagnostics Diagnostic[]
+
+  @@index([companyId, active])
+  @@index([leaderUserId])
+}
+
+// ───────────────────────────────────────────────────────── catálogo ─────────
+
+/// Competencia = QUÉ se desarrolla. Independiente de las actividades.
+model Competency {
+  id               String             @id @default(cuid())
+  /// null => competencia global de la plataforma
+  companyId        String?
+  name             String
+  definition       String
+  expectedBehavior String
+  category         CompetencyCategory
+  active           Boolean            @default(true)
+  order            Int                @default(0)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  company          Company?             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  levels           CompetencyLevel[]
+  activities       ActivityCompetency[]
+  planCompetencies PlanCompetency[]
+
+  @@unique([companyId, name])
+  @@index([active, category])
+}
+
+/// Escala de dominio 1..5 de cada competencia (nivel actual / nivel requerido).
+model CompetencyLevel {
+  id           String @id @default(cuid())
+  competencyId String
+  level        Int
+  name         String
+  description  String
+
+  competency Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  @@unique([competencyId, level])
+}
+
+/// Herramienta de desarrollo = CÓMO se desarrolla (mentoría, proyecto, curso…).
+/// El catálogo principal de 8 herramientas sobre el que opera la regla 5/8.
+model DevelopmentTool {
+  id              String          @id @default(cuid())
+  companyId       String?
+  name            String
+  slug            String
+  description     String
+  methodology     Methodology
+  icon            String          @default("sparkles")
+  /// Si pertenece al catálogo principal sujeto a la regla 5 de 8 / 8 de 8.
+  isCore          Boolean         @default(true)
+  /// Herramientas reservadas para planes de posición futura.
+  developmentType DevelopmentType @default(BOTH)
+  active          Boolean         @default(true)
+  order           Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  company        Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  activities     Activity[]
+  planActivities PlanActivity[]
+
+  @@unique([companyId, slug])
+  @@index([active, methodology])
+}
+
+/// Actividad = acción concreta de desarrollo. Reutilizable entre competencias.
+model Activity {
+  id                   String          @id @default(cuid())
+  companyId            String?
+  title                String
+  description          String
+  /// Beneficio / para qué sirve (se muestra en la tarjeta del catálogo).
+  benefit              String
+  methodology          Methodology
+  toolId               String?
+  difficulty           Difficulty      @default(INTERMEDIATE)
+  developmentType      DevelopmentType @default(BOTH)
+  /// Duración estimada en texto legible ("4 semanas", "90 días").
+  duration             String
+  /// Indicador de éxito sugerido, precargado al agregar al plan.
+  suggestedIndicator   String?
+  /// Evidencia esperada sugerida.
+  suggestedEvidence    String?
+  /// Responsable sugerido.
+  suggestedResponsible ResponsibleType @default(EMPLOYEE)
+  /// Nivel mínimo de desempeño recomendado (motor de recomendación).
+  minPerformance       RatingLevel?
+  /// Nivel mínimo de potencial recomendado (motor de recomendación).
+  minPotential         RatingLevel?
+  active               Boolean         @default(true)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  company        Company?             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  tool           DevelopmentTool?     @relation(fields: [toolId], references: [id], onDelete: SetNull)
+  competencies   ActivityCompetency[]
+  planActivities PlanActivity[]
+
+  @@index([active, methodology])
+  @@index([companyId])
+}
+
+/// Relación muchos-a-muchos: una actividad desarrolla varias competencias.
+model ActivityCompetency {
+  activityId   String
+  competencyId String
+  /// Peso de la relación: prioriza el orden de las recomendaciones.
+  weight       Int    @default(50)
+
+  activity   Activity   @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  competency Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  @@id([activityId, competencyId])
+  @@index([competencyId])
+}
+
+// ─────────────────────────────────────────────────────── diagnóstico ────────
+
+model PerformanceEvaluation {
+  id         String      @id @default(cuid())
+  companyId  String
+  employeeId String
+  period     String
+  rating     RatingLevel
+  score      Float?
+  comment    String?
+  createdAt  DateTime    @default(now())
+
+  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId, period])
+}
+
+model PotentialEvaluation {
+  id         String      @id @default(cuid())
+  companyId  String
+  employeeId String
+  period     String
+  rating     RatingLevel
+  score      Float?
+  comment    String?
+  createdAt  DateTime    @default(now())
+
+  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId, period])
+}
+
+/// Diagnóstico consolidado que alimenta un plan: desempeño + potencial + aspiración.
+model Diagnostic {
+  id             String           @id @default(cuid())
+  companyId      String
+  employeeId     String
+  planId         String?          @unique
+  source         DiagnosticSource @default(MANUAL)
+  performance    RatingLevel
+  potential      RatingLevel
+  aspiration     Aspiration       @default(UNDEFINED)
+  aspirationNote String?
+  /// Casilla de la matriz 9 Box (1..9), derivada de desempeño × potencial.
+  nineBox        Int?
+  notes          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  company  Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  plan     DevelopmentPlan? @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, employeeId])
+}
+
+// ──────────────────────────────────────────────────────────── planes ────────
+
+model DevelopmentPlan {
+  id                  String         @id @default(cuid())
+  companyId           String
+  employeeId          String
+  authorUserId        String
+  status              PlanStatus     @default(DRAFT)
+  objectiveType       ObjectiveType?
+  /// Redacción libre del objetivo principal del desarrollo.
+  objectiveStatement  String?
+  targetPositionId    String?
+  targetPositionTitle String?
+  targetPositionArea  String?
+  horizon             Horizon?
+  planDate            DateTime       @default(now())
+  /// Último paso del asistente alcanzado (1..9) — permite "guardar y continuar".
+  wizardStep          Int            @default(1)
+  completion          Int            @default(0)
+  version             Int            @default(1)
+  /// Plan del que procede esta versión (histórico de versiones).
+  parentPlanId        String?
+  finalizedAt         DateTime?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  company        Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee       Employee          @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  author         User              @relation("PlanAuthor", fields: [authorUserId], references: [id])
+  targetPosition Position?         @relation("TargetPosition", fields: [targetPositionId], references: [id], onDelete: SetNull)
+  parentPlan     DevelopmentPlan?  @relation("PlanVersions", fields: [parentPlanId], references: [id], onDelete: SetNull)
+  versions       DevelopmentPlan[] @relation("PlanVersions")
+
+  diagnostic   Diagnostic?
+  competencies PlanCompetency[]
+  activities   PlanActivity[]
+  exports      PdfExport[]
+
+  @@index([companyId, status])
+  @@index([employeeId])
+  @@index([authorUserId])
+}
+
+/// Competencia priorizada dentro de un plan, con brecha nivel actual → requerido.
+model PlanCompetency {
+  id            String  @id @default(cuid())
+  planId        String
+  competencyId  String
+  priority      Int     @default(1)
+  currentLevel  Int     @default(2)
+  requiredLevel Int     @default(4)
+  /// Objetivo de desarrollo redactado para esta competencia.
+  objective     String?
+
+  plan       DevelopmentPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  competency Competency      @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  activities PlanActivity[]
+
+  @@unique([planId, competencyId])
+  @@index([planId])
+}
+
+/// Acción concreta del plan. Nace de una actividad del catálogo (o es libre)
+/// y se personaliza con responsable, fechas, indicador y evidencia.
+model PlanActivity {
+  id               String          @id @default(cuid())
+  planId           String
+  planCompetencyId String
+  /// Actividad de origen en el catálogo (null si el usuario la escribió).
+  activityId       String?
+  toolId           String?
+  methodology      Methodology
+  title            String
+  objective        String?
+  responsibleType  ResponsibleType @default(EMPLOYEE)
+  responsibleName  String?
+  startDate        DateTime?
+  targetDate       DateTime?
+  frequency        String?
+  successIndicator String?
+  expectedEvidence String?
+  notes            String?
+  order            Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  plan           DevelopmentPlan  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planCompetency PlanCompetency   @relation(fields: [planCompetencyId], references: [id], onDelete: Cascade)
+  activity       Activity?        @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  tool           DevelopmentTool? @relation(fields: [toolId], references: [id], onDelete: SetNull)
+
+  @@index([planId, methodology])
+  @@index([planCompetencyId])
+}
+
+// ────────────────────────────────────────────────── acceso y auditoría ──────
+
+/// Código de acceso entregado a una empresa para dar de alta usuarios.
+model AccessCode {
+  id        String    @id @default(cuid())
+  companyId String
+  code      String    @unique
+  role      Role      @default(LEADER)
+  maxUses   Int       @default(1)
+  uses      Int       @default(0)
+  expiresAt DateTime?
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, active])
+}
+
+model PdfExport {
+  id        String   @id @default(cuid())
+  companyId String
+  planId    String
+  userId    String
+  fileName  String
+  version   Int      @default(1)
+  pages     Int?
+  createdAt DateTime @default(now())
+
+  company Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  plan    DevelopmentPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([companyId, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  companyId String?
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, createdAt])
+  @@index([entity, entityId])
+}
