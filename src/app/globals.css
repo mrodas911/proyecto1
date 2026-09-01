@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Sistema de diseño — moderno, premium, corporativo, limpio.
+   Verde profundo como color de marca (crecimiento), arena como fondo cálido.
+   ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-brand-50: #eef6f4;
+  --color-brand-100: #d6e9e4;
+  --color-brand-200: #aed3ca;
+  --color-brand-300: #7fb7ab;
+  --color-brand-400: #4f958a;
+  --color-brand-500: #2f7a70;
+  --color-brand-600: #1f5f5b;
+  --color-brand-700: #194b48;
+  --color-brand-800: #143b39;
+  --color-brand-900: #0f2c2b;
+
+  --color-sand-50: #fbfaf7;
+  --color-sand-100: #f5f2ec;
+  --color-sand-200: #e9e4da;
+  --color-sand-300: #d8d1c3;
+
+  --color-ink-900: #14201f;
+  --color-ink-700: #2c3a38;
+  --color-ink-500: #55635f;
+  --color-ink-400: #7b8783;
+  --color-ink-200: #c7cecb;
+
+  --color-m10: #2f6fed;
+  --color-m10-soft: #e8f0fe;
+  --color-m20: #b8712a;
+  --color-m20-soft: #fbf0e2;
+  --color-m70: #1f5f5b;
+  --color-m70-soft: #e2efec;
+
+  --color-positive: #2e7d5b;
+  --color-warning: #9c6206;
+  --color-danger: #b03a2b;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: 16px;
+  --shadow-card: 0 1px 2px rgba(20, 32, 31, 0.04), 0 12px 32px -20px rgba(20, 32, 31, 0.35);
+  --shadow-lift: 0 2px 6px rgba(20, 32, 31, 0.06), 0 20px 44px -24px rgba(20, 32, 31, 0.45);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-sand-100);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: var(--color-brand-200);
+  }
+  /* Foco visible en todo elemento interactivo: requisito de accesibilidad. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* Tailwind v4 no permite `@apply` sobre clases propias, por lo que cada
+     variante declara sus utilidades completas en lugar de componer. */
+  .card {
+    @apply rounded-2xl border border-sand-200 bg-white;
+    box-shadow: var(--shadow-card);
+  }
+  .card-interactive {
+    @apply rounded-2xl border border-sand-200 bg-white transition-all duration-200;
+    box-shadow: var(--shadow-card);
+  }
+  .card-interactive:hover {
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+    border-color: var(--color-brand-200);
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+           transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply bg-brand-600 text-white hover:bg-brand-700 active:scale-[.98];
+  }
+  .btn-secondary {
+    @apply border border-sand-300 bg-white text-ink-700 hover:border-brand-300 hover:text-brand-700;
+  }
+  .btn-ghost {
+    @apply text-ink-500 hover:bg-sand-200 hover:text-ink-900;
+  }
+  .btn-danger {
+    @apply border border-red-200 bg-white text-[color:var(--color-danger)] hover:bg-red-50;
+  }
+  .btn-lg {
+    @apply px-6 py-3.5 text-base;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-sand-300 bg-white px-3.5 py-2.5 text-sm text-ink-900
+           placeholder:text-ink-400 focus:border-brand-400 focus:outline-none
+           focus:ring-4 focus:ring-brand-100;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink-700;
+  }
+  .hint {
+    @apply mt-1 text-xs text-ink-400;
+  }
+
+  .chip,
+  .chip-neutral,
+  .chip-brand,
+  .chip-m10,
+  .chip-m20,
+  .chip-m70 {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  .chip-neutral { @apply bg-sand-200 text-ink-700; }
+  .chip-brand   { @apply bg-brand-50 text-brand-700; }
+  .chip-m10     { @apply bg-[color:var(--color-m10-soft)] text-[color:var(--color-m10)]; }
+  .chip-m20     { @apply bg-[color:var(--color-m20-soft)] text-[color:var(--color-m20)]; }
+  .chip-m70     { @apply bg-[color:var(--color-m70-soft)] text-[color:var(--color-m70)]; }
+
+  .section-title {
+    @apply text-lg font-semibold text-ink-900;
+  }
+  .muted {
+    @apply text-sm text-ink-500;
+  }
+
+  /* Carrusel horizontal del catálogo. */
+  .rail {
+    @apply flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4;
+    scrollbar-width: thin;
+  }
+  .rail > * {
+    @apply snap-start;
+  }
+  .rail::-webkit-scrollbar { height: 8px; }
+  .rail::-webkit-scrollbar-thumb {
+    background: var(--color-sand-300);
+    border-radius: 999px;
+  }
+}
+
+/* Microanimaciones discretas: refuerzan el avance sin distraer. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-rise { animation: rise 0.35s ease-out both; }
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.animate-pulse-soft { animation: pulse-soft 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
