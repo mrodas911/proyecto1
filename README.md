@@ -1,4 +1,45 @@
-# Ruta — plataforma de Planes de Desarrollo Individual
+# Domina — sitio corporativo y plataforma Ruta
+
+Este repositorio aloja dos productos que comparten despliegue:
+
+| Qué | Dónde | Descripción |
+| --- | --- | --- |
+| **Sitio de Domina** | `/`, `/servicios`, `/acerca-de`, `/contacto`, `/colabora-con-nosotros` | Web pública de la consultora cuencana Domina, fundada por Mateo Sebastián Rodas. |
+| **Ruta** | `/login` y todo lo que cuelga de él | Plataforma de Planes de Desarrollo Individual (acceso con sesión). |
+
+---
+
+## Sitio de Domina
+
+Consultora de estrategia y crecimiento empresarial con base en Cuenca, Ecuador.
+El sitio presenta seis líneas de servicio —Domina Estrategia, Domina Digital,
+Domina Academy, Domina Talento, Fábrica de Vendedores y Domina IA—, el método de
+trabajo en cuatro fases, la firma y su fundador, un formulario de contacto y la
+página de colaboración profesional.
+
+**Todo el contenido comercial vive en `src/lib/domina.ts`.** Para publicar hay
+que completar allí los campos marcados con `TODO`:
+
+- `empresa.email`, `empresa.telefono` y `empresa.telefonoEnlace` (hoy son
+  marcadores de posición).
+- `redes`: las redes sociales solo aparecen en el pie cuando tienen `href`.
+- `fundador.credenciales`: formación y trayectoria verificables.
+- `testimonios`: la sección se renderiza únicamente si el arreglo tiene
+  contenido, para no publicar testimonios inventados.
+
+El formulario de `/contacto` envía a `POST /api/contacto`, que valida con Zod,
+aplica un límite de cinco envíos por hora e IP y **registra la solicitud en el
+log del servidor**. Falta conectarlo al correo corporativo o al CRM: es el
+`TODO` marcado en `src/app/api/contacto/route.ts`.
+
+La identidad visual del sitio (azul profundo, cobre y papel cálido, con
+titulares en Fraunces) está aislada del sistema de la aplicación: sus tokens y
+clases viven al final de `src/app/globals.css` bajo el bloque `DOMINA` y usan los
+prefijos `dom-`, `copper-` y `paper-`.
+
+---
+
+## Ruta — plataforma de Planes de Desarrollo Individual
 
 Constructor guiado de Planes de Desarrollo Individual (PDI) bajo metodología
 70-20-10, pensado como SaaS B2B multiempresa para Recursos Humanos y Desarrollo
@@ -121,13 +162,18 @@ prisma/
   seed.ts / seed-data.ts  catálogo inicial y empresa de demostración
 src/
   app/
+    (sitio)/              sitio público de Domina (portada, servicios, contacto)
     (app)/                aplicación con sesión: dashboard, planes, admin…
+    ruta/                 portada de presentación de la plataforma Ruta
     documento/[id]/       documento ejecutivo imprimible
     api/                  route handlers (planes, catálogo, administración)
+    api/contacto/         recepción del formulario del sitio público
   components/
+    sitio/                cabecera, pie, formulario y piezas del sitio público
     wizard/               los nueve pasos del asistente
     admin/                gestores de contenido y configuración
   lib/
+    domina.ts             contenido y datos del sitio público
     recommender.ts        motor de recomendación por reglas
     plan-validation.ts    completitud del plan y qué falta
     rules.ts / settings.ts reglas configurables (5/8, máximos, umbrales)
@@ -162,7 +208,9 @@ duplicar el catálogo base.
 - Sesión en cookie `httpOnly`, `sameSite=lax`, `secure` en producción.
 - Recuperación de contraseña con token de un solo uso, hasheado y con caducidad.
 - Limitación de intentos de acceso por IP y correo.
-- Todos los endpoints comprueban rol y empresa; el middleware protege las rutas.
+- Todos los endpoints comprueban rol y empresa; el middleware (`src/proxy.ts`)
+  protege las rutas. Solo el sitio público de Domina, el acceso y
+  `POST /api/contacto` quedan abiertos sin sesión.
 - El **diagnóstico** (desempeño, potencial y aspiración) es información
   confidencial: se entrega únicamente a los roles con permiso `diagnostic.read`,
   y el documento oculta la valoración a quien no lo tenga.

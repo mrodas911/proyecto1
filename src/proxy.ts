@@ -6,8 +6,23 @@ import { SESSION_COOKIE, verifySession } from "@/lib/session";
  * que pueda ejecutarse en el runtime Edge antes de servir cualquier página.
  */
 
-/** Rutas accesibles sin sesión. */
-const PUBLIC_PATHS = ["/", "/login", "/recuperar", "/restablecer"];
+/** Rutas accesibles sin sesión: sitio público de Domina y flujo de acceso. */
+const PUBLIC_PATHS = [
+  "/",
+  "/acerca-de",
+  "/servicios",
+  "/contacto",
+  "/colabora-con-nosotros",
+  "/ruta",
+  "/login",
+  "/recuperar",
+  "/restablecer",
+  "/sitemap.xml",
+  "/robots.txt",
+];
+
+/** Prefijos públicos: fichas de servicio y formulario de contacto del sitio. */
+const PUBLIC_PREFIXES = ["/servicios/", "/api/contacto"];
 
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -15,6 +30,7 @@ export default async function proxy(request: NextRequest) {
 
   const isPublic =
     PUBLIC_PATHS.includes(pathname) ||
+    PUBLIC_PREFIXES.some((prefijo) => pathname.startsWith(prefijo)) ||
     pathname.startsWith("/api/auth/") ||
     pathname.startsWith("/_next");
 
@@ -28,7 +44,7 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (session && (pathname === "/login" || pathname === "/")) {
+  if (session && pathname === "/login") {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     url.search = "";

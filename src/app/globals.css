@@ -177,3 +177,112 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DOMINA — sitio público de la consultora.
+   Identidad propia (azul profundo + cobre sobre papel cálido), separada del
+   sistema de la aplicación para que ambos puedan evolucionar por su cuenta.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@theme {
+  --color-dom-950: #070E17;
+  --color-dom-900: #0B1523;
+  --color-dom-800: #132437;
+  --color-dom-700: #1C3550;
+  --color-dom-600: #294D70;
+  --color-dom-500: #3E6C93;
+  --color-dom-400: #6D93B2;
+  --color-dom-300: #9DB6CC;
+  --color-dom-200: #C8D7E3;
+  --color-dom-100: #E2EAF1;
+  --color-dom-50: #F2F6F9;
+
+  --color-copper-700: #855215;
+  --color-copper-600: #A5691F;
+  --color-copper-500: #C4872F;
+  --color-copper-400: #DCA55E;
+  --color-copper-300: #EAC08C;
+  --color-copper-100: #F7E8D2;
+  --color-copper-50: #FCF6EC;
+
+  --color-paper-50: #FDFCFA;
+  --color-paper-100: #FBF8F4;
+  --color-paper-200: #F4EFE8;
+  --color-paper-300: #E7DFD3;
+
+  --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+
+  --shadow-dom: 0 1px 2px rgba(11, 21, 35, 0.05), 0 14px 40px -24px rgba(11, 21, 35, 0.45);
+  --shadow-dom-lift: 0 2px 8px rgba(11, 21, 35, 0.08), 0 26px 56px -28px rgba(11, 21, 35, 0.55);
+}
+
+@layer components {
+  /* Tipografía editorial para titulares del sitio público. */
+  .dom-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    font-variation-settings: "SOFT" 0, "WONK" 0;
+  }
+  .dom-eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--color-copper-600)];
+  }
+  .dom-eyebrow-light {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--color-copper-300)];
+  }
+
+  .dom-btn,
+  .dom-btn-primary,
+  .dom-btn-outline,
+  .dom-btn-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold
+           transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .dom-btn-primary {
+    @apply bg-dom-900 text-white hover:bg-dom-700 active:scale-[.98];
+  }
+  .dom-btn-outline {
+    @apply border border-dom-200 bg-white/70 text-dom-800 hover:border-dom-400 hover:bg-white;
+  }
+  .dom-btn-light {
+    @apply bg-[color:var(--color-copper-500)] text-dom-950 hover:bg-[color:var(--color-copper-400)] active:scale-[.98];
+  }
+
+  .dom-card {
+    @apply rounded-3xl border border-paper-300 bg-white p-7 transition-all duration-200;
+    box-shadow: var(--shadow-dom);
+  }
+  .dom-card-hover:hover {
+    box-shadow: var(--shadow-dom-lift);
+    transform: translateY(-3px);
+    border-color: var(--color-copper-300);
+  }
+  .dom-card-dark {
+    @apply rounded-3xl border border-white/10 bg-white/[0.04] p-7;
+  }
+
+  .dom-input {
+    @apply w-full rounded-xl border border-paper-300 bg-white px-4 py-3 text-sm text-dom-900
+           placeholder:text-dom-300 focus:border-dom-400 focus:outline-none focus:ring-4
+           focus:ring-dom-100;
+  }
+  .dom-label {
+    @apply mb-1.5 block text-sm font-medium text-dom-800;
+  }
+
+  /* Contenedor de ancho de lectura del sitio. */
+  .dom-wrap {
+    @apply mx-auto w-full max-w-6xl px-6;
+  }
+  /* Línea fina de acento bajo los titulares de sección. */
+  .dom-rule::after {
+    content: "";
+    @apply mt-5 block h-px w-16 bg-[color:var(--color-copper-500)];
+  }
+}
+
+/* Trama sutil para las secciones oscuras: da profundidad sin imágenes. */
+.dom-grid-bg {
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(196, 135, 47, 0.16), transparent 42%),
+    radial-gradient(circle at 82% 78%, rgba(62, 108, 147, 0.22), transparent 46%);
+}
